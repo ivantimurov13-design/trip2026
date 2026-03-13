@@ -2,313 +2,1071 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Европа 2026 — PWA</title>
-  <meta name="theme-color" content="#b7791f" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Европа '26" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="description" content="Семейный путеводитель по поездке Европа 2026" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" href="icon-192.png" sizes="192x192" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#B7791F" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <title>Европа 2026 | Интерактивный путеводитель</title>
   <style>
     :root {
-      --bg: #f7f4ee;
+      --bg: #fdfbf7;
       --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --line: #e5e7eb;
+      --text: #243041;
+      --muted: #6b7788;
+      --line: #e7ebf0;
       --accent: #b7791f;
-      --accent-soft: #f7e7c5;
-      --ok: #eef6ff;
+      --accent-soft: #fff3d6;
+      --accent-2: #f4efe4;
+      --danger: #b42318;
+      --shadow: 0 10px 30px rgba(36, 48, 65, 0.06);
+      --radius: 24px;
+      --radius-sm: 16px;
     }
+
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: calc(24px + env(safe-area-inset-bottom));
     }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+
+    .hidden { display: none !important; }
+    .container {
+      width: min(1040px, calc(100vw - 28px));
+      margin: 0 auto;
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.88);
+      border-bottom: 1px solid rgba(231,235,240,0.85);
+    }
     .nav {
-      position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92);
-      backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
-      padding-top: env(safe-area-inset-top);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+      padding: 0 6px;
     }
-    .nav-inner {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px;
+    .brand {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
     }
-    .brand { font-weight: 800; letter-spacing: -.02em; }
-    .tabs { display: flex; gap: 10px; overflow: auto; scrollbar-width: none; }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
     .tabs::-webkit-scrollbar { display: none; }
-    .tab {
-      white-space: nowrap; background: transparent; border: 0; padding: 18px 4px 14px;
-      color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    .tab-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 22px 4px 18px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 700;
       border-bottom: 3px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
     }
-    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .hero, .card { background: var(--card); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 4px 18px rgba(0,0,0,.03); }
-    .hero { padding: 24px; margin-top: 20px; }
-    h1 { margin: 0 0 10px; font-size: 34px; line-height: 1.05; }
-    h2 { margin: 0 0 8px; font-size: 24px; }
-    p { margin: 0; line-height: 1.55; }
-    .muted { color: var(--muted); }
-    .stats, .grid-2 { display: grid; gap: 12px; }
-    .stats { grid-template-columns: repeat(2,1fr); margin-top: 18px; }
-    .grid-2 { grid-template-columns: 1fr; margin-top: 16px; }
-    .stat, .budget-item { background: #f9fafb; border-radius: 18px; padding: 14px; }
-    .stat.highlight { background: #fff7e7; }
-    .label { display: block; color: var(--muted); font-size: 12px; text-transform: uppercase; margin-bottom: 4px; }
-    .value { font-weight: 800; }
-    .section { display: none; margin-top: 20px; }
-    .section.active { display: block; }
-    .stack { display: grid; gap: 14px; }
-    .card { padding: 18px; }
-    .booking { margin-top: 14px; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 16px; background: #f8fafc; }
-    .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
-    .accordion-head { display:flex; justify-content:space-between; align-items:center; gap:12px; cursor:pointer; }
-    .accordion-body { display:none; padding-top: 14px; }
-    .accordion.open .accordion-body { display:block; }
-    .plus {
-      width: 30px; height: 30px; border-radius: 999px; display:grid; place-items:center; background:#f3f4f6; color:#4b5563; font-size:22px;
-      flex: 0 0 30px;
+    .tab-btn.active {
+      color: var(--accent);
+      border-color: var(--accent);
     }
-    .timeline { border-left: 2px solid #d6b06b; margin-left: 6px; padding-left: 16px; display:grid; gap:16px; }
-    .event { position: relative; }
-    .event::before {
-      content:""; position:absolute; left:-23px; top:6px; width:10px; height:10px; border-radius:999px; background:#d6b06b;
+
+    main { padding: 28px 0 56px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    .time { color: var(--muted); font-size: 12px; font-weight: 700; margin-bottom: 4px; }
-    .budget-bar { margin-top: 12px; border-radius: 999px; overflow: hidden; height: 14px; background:#eef2f7; display:flex; }
-    .seg1{background:#4f46e5}.seg2{background:#10b981}.seg3{background:#f59e0b}.seg4{background:#8b5cf6}.seg5{background:#ef4444}
-    .tip { background: var(--card); border:1px solid var(--line); border-radius: 22px; padding: 18px; }
-    .pill-row { display:flex; gap:8px; overflow:auto; padding-bottom: 4px; scrollbar-width:none; }
-    .pill-row::-webkit-scrollbar { display:none; }
-    .pill { border:0; background:#eceff3; color:#475569; padding:10px 14px; border-radius:999px; font-weight:700; white-space:nowrap; }
-    .pill.active { background: var(--accent); color:#fff; }
-    .install-box { background: linear-gradient(135deg, #b7791f, #d9a441); color:#fff; margin-top: 18px; }
-    .install-box p { color: rgba(255,255,255,.92); }
-    .footer { text-align:center; color:var(--muted); font-size:12px; margin: 28px 0 8px; }
-    .inline-list { display:grid; gap:12px; }
-    @media (min-width: 740px){
-      .stats { grid-template-columns: repeat(4,1fr); }
-      .grid-2 { grid-template-columns: repeat(2,1fr); }
-      .inline-list { grid-template-columns: repeat(2,1fr); }
+    .card.pad-xl { padding: 28px; }
+    .card.pad-lg { padding: 22px; }
+    .grid { display: grid; gap: 18px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .hero-title {
+      margin: 0 0 10px;
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+    }
+    .subtle { color: var(--muted); }
+    .stat {
+      background: #fafbfc;
+      border-radius: 18px;
+      padding: 14px 16px;
+      min-height: 84px;
+    }
+    .stat.highlight { background: var(--accent-soft); }
+    .stat-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: #8a94a5;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .section-title {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .section-note { margin: 6px 0 0; color: var(--muted); }
+
+    .overview-banner {
+      margin-top: 18px;
+      background: linear-gradient(135deg, #b7791f 0%, #d1953f 100%);
+      color: white;
+      padding: 22px;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 16px 40px rgba(183, 121, 31, 0.22);
+    }
+    .overview-banner h3 { margin: 0 0 8px; font-size: 28px; }
+    .overview-banner p { margin: 0; color: rgba(255,255,255,0.92); max-width: 620px; }
+    .overview-banner .emoji {
+      position: absolute;
+      right: -10px;
+      bottom: -16px;
+      font-size: 84px;
+      opacity: 0.17;
+      pointer-events: none;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .pill-row::-webkit-scrollbar { display: none; }
+    .pill {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      background: #eff2f6;
+      color: #475467;
+    }
+    .pill.active { background: var(--accent); color: white; }
+
+    .tip-card {
+      padding: 20px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .tip-cat {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .tip-title {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .tip-text { margin: 0; color: var(--muted); line-height: 1.65; }
+
+    .accordion-list { display: grid; gap: 14px; }
+    .accordion-item {
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .accordion-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px;
+      cursor: pointer;
+    }
+    .accordion-head:hover { background: #fbfcfe; }
+    .accordion-dates {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+    }
+    .accordion-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+    .accordion-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #f3f5f8;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      color: #667085;
+      flex: 0 0 auto;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .accordion-item.open .accordion-toggle {
+      transform: rotate(45deg);
+      background: #fff4db;
+      color: var(--accent);
+    }
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .35s ease;
+      background: #fafbfc;
+      border-top: 0 solid transparent;
+      padding: 0 22px;
+    }
+    .accordion-item.open .accordion-body {
+      max-height: 3600px;
+      padding: 6px 22px 22px;
+      border-top: 1px solid var(--line);
+    }
+    .timeline { display: grid; gap: 22px; }
+    .timeline-item {
+      position: relative;
+      padding-left: 22px;
+      border-left: 2px solid #d7deea;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 0 5px rgba(255,255,255,0.9);
+    }
+    .timeline-time {
+      display: block;
+      font-size: 12px;
+      color: #8a94a5;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .timeline-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .timeline-desc {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .budget-wrap {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 26px;
+      align-items: center;
+    }
+    .donut {
+      width: min(320px, 100%);
+      aspect-ratio: 1;
+      border-radius: 999px;
+      position: relative;
+      margin: 0 auto;
+      background: conic-gradient(#3b82f6 0 62.79%, #10b981 62.79% 78.68%, #f59e0b 78.68% 87.08%, #8b5cf6 87.08% 96.77%, #ef4444 96.77% 100%);
+      box-shadow: inset 0 0 0 1px rgba(36, 48, 65, 0.05), var(--shadow);
+    }
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 22%;
+      border-radius: inherit;
+      background: var(--card);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+      text-align: center;
+      padding: 28%;
+    }
+    .donut-center strong {
+      display: block;
+      font-size: 34px;
+      letter-spacing: -0.03em;
+    }
+    .budget-list { display: grid; gap: 14px; }
+    .budget-item {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #fafbfc;
+      border: 1px solid var(--line);
+    }
+    .budget-item-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #eef2f6;
+      overflow: hidden;
+    }
+    .bar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+    }
+    .budget-total {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .warning {
+      background: #fff8e8;
+      border: 1px solid #f3d8a6;
+      color: #7a5617;
+      padding: 14px 16px;
+      border-radius: 18px;
+      margin-bottom: 16px;
+      line-height: 1.55;
+    }
+    .warning code {
+      background: rgba(255,255,255,0.65);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .chat-shell {
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-history {
+      flex: 1 1 auto;
+      min-height: 260px;
+      max-height: 60vh;
+      overflow: auto;
+      display: grid;
+      gap: 14px;
+      padding-right: 2px;
+      margin-bottom: 18px;
+    }
+    .message {
+      padding: 16px 18px;
+      border-radius: 20px;
+      line-height: 1.65;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      border: 1px solid var(--line);
+    }
+    .message.user {
+      margin-left: 40px;
+      background: #f4f6f8;
+      color: var(--text);
+    }
+    .message.bot {
+      margin-right: 40px;
+      background: #fff8e8;
+      border-color: #f0ddb8;
+    }
+    .message strong { font-weight: 800; }
+    .message.loading::after {
+      content: "";
+      display: inline-block;
+      width: 1.2em;
+      text-align: left;
+      animation: dots 1.3s infinite steps(4);
+      overflow: hidden;
+      vertical-align: bottom;
+    }
+    @keyframes dots {
+      0% { content: ""; }
+      25% { content: "."; }
+      50% { content: ".."; }
+      75% { content: "..."; }
+      100% { content: ""; }
+    }
+
+    .quick-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .quick-btn {
+      border: 0;
+      background: #eff2f6;
+      color: #4d5a6c;
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .quick-btn:disabled { cursor: not-allowed; opacity: .55; }
+
+    .chat-input-wrap {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: auto;
+    }
+    .chat-input {
+      width: 100%;
+      border: 1px solid #d9e1ea;
+      background: #fafbfc;
+      border-radius: 20px;
+      padding: 15px 18px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .chat-input:focus {
+      border-color: #e2b561;
+      box-shadow: 0 0 0 4px rgba(183,121,31,0.14);
+    }
+    .send-btn {
+      border: 0;
+      background: var(--accent);
+      color: white;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      cursor: pointer;
+      font-size: 21px;
+      flex: 0 0 auto;
+      box-shadow: 0 12px 24px rgba(183,121,31,0.24);
+    }
+    .send-btn:disabled, .chat-input:disabled { opacity: .55; cursor: not-allowed; }
+
+    .footer {
+      margin-top: 34px;
+      text-align: center;
+      color: #8a94a5;
+      font-size: 13px;
+      line-height: 1.6;
+      padding: 0 12px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .budget-wrap { grid-template-columns: 1fr; }
+      .message.user { margin-left: 14px; }
+      .message.bot { margin-right: 14px; }
+      .nav { flex-direction: column; align-items: stretch; padding: 10px 0 0; }
+      .tabs { padding-left: 2px; }
+      .brand { padding: 0 6px; }
     }
   </style>
+  <script src="./config.js"></script>
 </head>
 <body>
-  <nav class="nav">
-    <div class="wrap nav-inner">
-      <div class="brand">Европа '26</div>
+  <div class="nav-wrap">
+    <div class="container nav">
+      <div class="brand">Европа ’26</div>
       <div class="tabs">
-        <button class="tab active" data-tab="overview">Обзор</button>
-        <button class="tab" data-tab="plan">План</button>
-        <button class="tab" data-tab="budget">Бюджет</button>
-        <button class="tab" data-tab="tips">Советы</button>
+        <button class="tab-btn active" data-tab="main">Обзор</button>
+        <button class="tab-btn" data-tab="plan">План</button>
+        <button class="tab-btn" data-tab="budget">Бюджет</button>
+        <button class="tab-btn" data-tab="tips">Советы</button>
+        <button class="tab-btn" data-tab="ai">Консьерж ✨</button>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <main class="wrap">
-    <section id="overview" class="section active">
-      <div class="hero">
-        <h1>Большое семейное путешествие</h1>
-        <p class="muted">Маршрут для 6 человек: 3 взрослых и 3 детей. Версия под iPhone с возможностью установки на экран «Домой».</p>
-        <div class="stats">
-          <div class="stat"><span class="label">Старт</span><span class="value">9 апреля</span></div>
-          <div class="stat"><span class="label">Финиш</span><span class="value">25 апреля</span></div>
-          <div class="stat"><span class="label">Стран</span><span class="value">4 государства</span></div>
-          <div class="stat highlight"><span class="label">Бюджет</span><span class="value">1.55 млн ₽</span></div>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <h2>🏨 Отель в Париже</h2>
-          <p><strong>Novotel Paris Les Halles</strong></p>
-          <p class="muted">10–14 апреля</p>
-          <div class="booking">
-            <span class="label">Бронирование</span>
-            <div class="code">PWJLDJKC</div>
+  <main class="container">
+    <section id="section-main" class="tab-section">
+      <div class="card pad-xl">
+        <h1 class="hero-title">Большое семейное путешествие</h1>
+        <p class="subtle">Маршрут для 6 человек: 3 взрослых и 3 детей (11 месяцев, Дамир 7 лет и Даня 10 лет).</p>
+        <div class="grid grid-4" style="margin-top: 22px;">
+          <div class="stat">
+            <span class="stat-label">Старт</span>
+            <span class="stat-value">9 апреля</span>
           </div>
-        </div>
-        <div class="card">
-          <h2>🚄 Переезд 14.04</h2>
-          <p><strong>TGV Lyria 9211</strong></p>
-          <p class="muted">Париж → Цюрих</p>
-          <div class="inline-list" style="margin-top:14px;">
-            <div class="stat"><span class="label">Выезд</span><span class="value">10:22</span></div>
-            <div class="stat"><span class="label">Класс</span><span class="value">1-й, Semi Flex</span></div>
+          <div class="stat">
+            <span class="stat-label">Финиш</span>
+            <span class="stat-value">25 апреля</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Стран</span>
+            <span class="stat-value">4 государства</span>
+          </div>
+          <div class="stat highlight">
+            <span class="stat-label">Бюджет</span>
+            <span class="stat-value" style="color: var(--accent);">1.55 млн ₽</span>
           </div>
         </div>
       </div>
 
-      <div class="card install-box">
-        <h2>Добавить на экран iPhone</h2>
-        <p>Откройте страницу в Safari → Поделиться → На экран «Домой». После этого гид будет запускаться почти как приложение.</p>
+      <div class="grid grid-2" style="margin-top: 18px;">
+        <div class="card pad-lg">
+          <h2 style="margin: 0 0 10px; font-size: 24px;">🏨 Отель в Париже</h2>
+          <div class="subtle">10–14 апреля</div>
+          <div style="font-size: 22px; font-weight: 800; margin-top: 6px;">Novotel Paris Les Halles</div>
+          <div style="margin-top: 18px; padding: 14px 16px; border-radius: 18px; background: #fafbfc; border: 1px dashed #cad3df;">
+            <div class="stat-label" style="margin-bottom: 8px;">Бронирование</div>
+            <div style="font-size: 24px; font-weight: 800; letter-spacing: 0.08em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">PWJLDJKC</div>
+          </div>
+        </div>
+        <div class="card pad-lg">
+          <h2 style="margin: 0 0 10px; font-size: 24px;">🚄 Переезд 14.04</h2>
+          <div style="font-size: 22px; font-weight: 800;">TGV Lyria 9211</div>
+          <div class="subtle" style="margin-top: 4px;">Париж → Цюрих</div>
+          <div class="grid grid-2" style="margin-top: 18px; gap: 12px;">
+            <div style="padding: 12px; border-radius: 16px; background: #eef6ff; text-align: center;">
+              <div class="stat-label" style="color: #4977b9;">Выезд</div>
+              <div style="font-size: 20px; font-weight: 800; color: #1d4f91;">10:22</div>
+            </div>
+            <div style="padding: 12px; border-radius: 16px; background: #fafbfc; text-align: center; border: 1px solid var(--line);">
+              <div class="stat-label">Класс</div>
+              <div style="font-size: 18px; font-weight: 800;">1-й (Semi Flex)</div>
+            </div>
+          </div>
+          <div class="meta-row">
+            <span>Лионский вокзал: приехать к 09:40</span>
+            <span>Посадка закрывается за 2 минуты</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-banner" id="open-ai-banner">
+        <h3>Голодны до впечатлений? ✨</h3>
+        <p>ИИ-консьерж подскажет ужин с детьми, план на день, маршруты, логистику, швейцарские часы и локальную гастрономию.</p>
+        <div class="emoji">🍽️</div>
       </div>
     </section>
 
-    <section id="plan" class="section"></section>
+    <section id="section-plan" class="tab-section hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Детальный тайминг</h2>
+          <p class="section-note">Нажмите на город, чтобы развернуть подробности и маршруты.</p>
+        </div>
+      </div>
+      <div id="plan-container" class="accordion-list"></div>
+    </section>
 
-    <section id="budget" class="section">
-      <div class="card">
-        <h2>Визуализация расходов</h2>
-        <p class="muted">Офлайн-версия без библиотек, поэтому вместо диаграммы — компактная полоса и разбивка по статьям.</p>
-        <div class="budget-bar" id="budget-bar"></div>
-        <div class="stack" id="budget-list" style="margin-top:16px;"></div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:18px; border-top:1px solid var(--line); font-weight:800;">
-          <span>Итого</span>
-          <span>1 548 000 ₽</span>
+    <section id="section-budget" class="tab-section hidden">
+      <div class="card pad-xl">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Визуализация расходов</h2>
+            <p class="section-note">Основные расходы по маршруту: проживание, перелёты и перемещения.</p>
+          </div>
+        </div>
+        <div class="budget-wrap">
+          <div class="donut">
+            <div class="donut-center">
+              <div>
+                <div class="subtle">Итого</div>
+                <strong>1 548 000 ₽</strong>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div id="budget-list" class="budget-list"></div>
+            <div class="budget-total">
+              <span>Итого</span>
+              <span style="color: var(--accent);">1 548 000 ₽</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="tips" class="section">
-      <div class="pill-row" id="tip-filters"></div>
-      <div class="stack" id="tips-list" style="margin-top:16px;"></div>
+    <section id="section-tips" class="tab-section hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Практичные советы</h2>
+          <p class="section-note">Еда, шопинг, логистика и идеи для детей по вашему маршруту.</p>
+        </div>
+      </div>
+      <div id="tip-filters" class="pill-row"></div>
+      <div id="tips-container" class="grid grid-2" style="margin-top: 18px;"></div>
+    </section>
+
+    <section id="section-ai" class="tab-section hidden">
+      <div class="card pad-xl chat-shell">
+        <div class="section-header" style="margin-bottom: 10px;">
+          <div>
+            <h2 class="section-title">ИИ-консьерж ✨</h2>
+            <p class="section-note">Персональные советы по маршруту, еде, часам, детям и логистике.</p>
+          </div>
+        </div>
+
+        <div id="concierge-warning" class="warning hidden"></div>
+
+        <div id="ai-chat-history" class="chat-history">
+          <div class="message bot">
+            Привет! Я ваш travel-консьерж по поездке «Европа 2026». Спросите меня про маршрут дня, еду для детей, логистику, часы или лучшие остановки по дороге.
+          </div>
+        </div>
+
+        <div class="quick-grid">
+          <button class="quick-btn" data-prompt="Подробнее про ферму альпийской икры Tropenhaus Frutigen. Как лучше встроить поездку в день из Зигрисвиля?">Ферма икры 💎</button>
+          <button class="quick-btn" data-prompt="Какие швейцарские часы или смарт-часы разумно купить до 1500 евро?">Выбор часов ⌚</button>
+          <button class="quick-btn" data-prompt="Какие блюда в Швейцарии лучше всего подойдут детям 7 и 10 лет?">Еда для детей 🧀</button>
+          <button class="quick-btn" data-prompt="Собери спокойный семейный план на один день в Париже без перегруза для детей и коляски.">План на день 🗓️</button>
+        </div>
+
+        <div class="chat-input-wrap">
+          <input id="ai-input" class="chat-input" type="text" placeholder="Например: где лучше поужинать в Женеве с детьми?" />
+          <button id="send-btn" class="send-btn" aria-label="Отправить">➜</button>
+        </div>
+      </div>
     </section>
 
     <div class="footer">
-      Для установки как PWA страницу нужно открывать не как локальный файл, а по ссылке через HTTPS или локальный сервер.
+      <p>Для комфортной поездки с младенцем используйте входы для маломобильных посетителей в крупных музеях. Парижские прогулки собраны с прицелом на коляску и спокойный семейный ритм.</p>
+      <p>Travel-приложение работает офлайн по основному маршруту; ИИ-консьержу нужен интернет и подключённый backend.</p>
     </div>
   </main>
 
   <script>
     const appData = {
       cities: [
-        { name: "🇹🇷 Стамбул", dates: "9–10 апреля", events: [
-          { time: "9 апр 15:05", title: "Вылет из Москвы", desc: "Перелёт Москва – Стамбул, прибытие около 19:10." },
-          { time: "9 апр 20:00", title: "Заселение", desc: "ISG Sabiha Gökçen Airport Hotel 4*. Ужин и отдых." },
-          { time: "10 апр 09:05", title: "Вылет в Париж", desc: "Перелёт Стамбул – Париж (Орли), прибытие в 11:50." }
-        ]},
-        { name: "🇫🇷 Париж", dates: "10–14 апреля", events: [
-          { time: "10 апр 14:00", title: "Заселение и прогулка", desc: "Novotel Paris Les Halles, затем Пале-Рояль, Опера, Галерея Лафайет." },
-          { time: "11 апр 10:00", title: "Авто-тур и Маре", desc: "Обзорный проезд, затем спокойная прогулка по Маре и площади Вогезов." },
-          { time: "12 апр 10:00", title: "Тюильри и Елисейские поля", desc: "Сад Тюильри, Angelina, затем Елисейские поля и Триумфальная арка." },
-          { time: "13 апр 10:00", title: "Эйфелева башня и левый берег", desc: "Фото, Rue Cler, затем Люксембургский сад." },
-          { time: "14 апр 10:22", title: "Поезд TGV Lyria", desc: "Переезд Париж → Цюрих, 1-й класс." }
-        ]},
-        { name: "🇨🇭 Цюрих", dates: "14–16 апреля", events: [
-          { time: "14 апр 15:00", title: "Заселение", desc: "Best Western Plus Zürcherhof." },
-          { time: "14 апр 16:00", title: "Старый город", desc: "Прогулка и ужин со швейцарской классикой." },
-          { time: "15 апр 14:00", title: "Музей и вода", desc: "Нацмузей и прогулка на кораблике." },
-          { time: "16 апр 10:00", title: "Аренда авто", desc: "Получение минивэна." }
-        ]},
-        { name: "🇦🇹 Брегенц и Лихтенштейн", dates: "16–18 апреля", events: [
-          { time: "16 апр", title: "Заселение", desc: "Grand Hotel Bregenz." },
-          { time: "17 апр", title: "Фельдкирх и Вадуц", desc: "Старый город, замок Вадуц, княжеская винодельня." },
-          { time: "18 апр", title: "Переезд", desc: "Выезд в Люцерн." }
-        ]},
-        { name: "🇨🇭 Люцерн и Зигрисвиль", dates: "18–22 апреля", events: [
-          { time: "18 апр", title: "Люцерн", desc: "Лев, Ледниковый сад и магазины часов." },
-          { time: "19 апр", title: "Гора Риги", desc: "Хорошая локация для семьи с коляской." },
-          { time: "19 апр", title: "Зигрисвиль", desc: "Solbadhotel Sigriswil, полупансион." },
-          { time: "20–21 апр", title: "Альпы и Tropenhaus Frutigen", desc: "Подъёмник Niederhorn и поездка на ферму альпийской икры." }
-        ]},
-        { name: "🇨🇭 Женева", dates: "22–25 апреля", events: [
-          { time: "22 апр", title: "Прибытие", desc: "Hotel Rotary Geneva, прогулка по озеру и старому городу." },
-          { time: "23 апр", title: "Ботанический сад", desc: "Оранжереи, животные и круиз по озеру." },
-          { time: "24–25 апр", title: "Обратный путь", desc: "Женева → Стамбул → Москва." }
-        ]}
+        {
+          name: "🇹🇷 Стамбул",
+          dates: "9–10 апреля",
+          color: "#64748b",
+          events: [
+            { time: "9 Апр 15:05", title: "Вылет из Москвы", desc: "Перелёт Москва — Стамбул, прибытие около 19:10." },
+            { time: "9 Апр 20:00", title: "Заселение в отель", desc: "ISG Sabiha Gökçen Airport Hotel 4*. Ужин и отдых перед следующим перелётом." },
+            { time: "10 Апр 09:05", title: "Вылет в Париж", desc: "Перелёт Стамбул — Париж (Орли), прибытие в 11:50." }
+          ]
+        },
+        {
+          name: "🇫🇷 Париж: день за днём",
+          dates: "10–14 апреля",
+          color: "#4f46e5",
+          events: [
+            { time: "10 Апр 14:00", title: "Заселение и Пале-Рояль", desc: "Novotel Paris Les Halles. После перелёта — спокойная прогулка: Пале-Рояль, Опера Гарнье, крыша Галереи Лафайет. Ужин: Au Pied de Cochon." },
+            { time: "11 Апр 10:00", title: "Авто-тур и квартал Маре", desc: "Индивидуальная экскурсия на Mercedes V-Class: Сите, Вандомская площадь, Трокадеро. После высадки — Le Marais и Площадь Вогезов. Перекус: L'As du Fallafel или ужин в Bofinger." },
+            { time: "12 Апр 10:00", title: "Тюильри и Елисейские Поля", desc: "Прогулка через Лувр в сад Тюильри, парусники в фонтане, Angelina, затем Ladurée и ужин в Le Relais de l'Entrecôte." },
+            { time: "13 Апр 10:00", title: "Фото у Башни и Левый берег", desc: "Трокадеро или Марсово поле, затем Rue Cler, Люксембургский сад и ужин в Le Procope либо семейной блинной в районе Сен-Мишель." },
+            { time: "14 Апр 10:22", title: "TGV Lyria в Цюрих", desc: "Отправление с Лионского вокзала в Париже в 10:22. Лучше приехать к 09:40. У вас билеты 1-го класса." }
+          ]
+        },
+        {
+          name: "🇨🇭 Цюрих",
+          dates: "14–16 апреля",
+          color: "#dc2626",
+          events: [
+            { time: "14 Апр 15:00", title: "Заселение", desc: "Best Western Plus Zürcherhof 3*, около 6 минут пешком от вокзала." },
+            { time: "14 Апр 16:00", title: "Старый город и ужин", desc: "Прогулка по центру. Варианты ужина: Swiss Chuchi, Raclette Factory или Pier 69." },
+            { time: "15 Апр 14:00", title: "Национальный музей и вода", desc: "Музей Швейцарии и спокойная прогулка на кораблике." },
+            { time: "16 Апр 10:00", title: "Аренда авто", desc: "Забираете минивэн по адресу Josephstrasse 53. Проверьте, что класс именно Van 7–9 мест." },
+            { time: "16 Апр 11:30", title: "Музей Lindt", desc: "Шоколадная экскурсия, магазин и выезд в Брегенц." }
+          ]
+        },
+        {
+          name: "🇦🇹 Брегенц и Лихтенштейн",
+          dates: "16–18 апреля",
+          color: "#059669",
+          events: [
+            { time: "16 Апр 15:00", title: "Заселение", desc: "Grand Hotel Bregenz - MGallery Collection 4*." },
+            { time: "16 Апр 16:00", title: "Прогулка и ужин", desc: "Подъёмник Пфендер и ужин в Maurachbund." },
+            { time: "17 Апр 10:00", title: "Фельдкирх", desc: "Короткая прогулка по старому городу и замку." },
+            { time: "17 Апр 12:30", title: "Лихтенштейн", desc: "Вадуц, княжеская винодельня и печать в паспорт по адресу Stadtle 39." },
+            { time: "18 Апр", title: "Переезд", desc: "Переезд в Люцерн, ориентировочно 1.5 часа в пути." }
+          ]
+        },
+        {
+          name: "🇨🇭 Люцерн и Зигрисвиль",
+          dates: "18–22 апреля",
+          color: "#0ea5e9",
+          events: [
+            { time: "18 Апр 12:00", title: "Люцерн и часы", desc: "Radisson 3*, памятник льву, Ледниковый сад и бутики часов." },
+            { time: "19 Апр 09:30", title: "Гора Риги", desc: "Маршрут с 10:18 до 13:00. Один из самых комфортных вариантов для коляски." },
+            { time: "19 Апр 15:00", title: "Зигрисвиль", desc: "Solbadhotel Sigriswil 4*. Ужин включён по HB." },
+            { time: "20–21 Апр", title: "Альпы и икра", desc: "Niederhorn и поездка на Tropenhaus Frutigen — ферму альпийской икры." }
+          ]
+        },
+        {
+          name: "🇨🇭 Женева",
+          dates: "22–24 апреля",
+          color: "#2563eb",
+          events: [
+            { time: "22 Апр 13:00", title: "Прибытие", desc: "Hotel Rotary Geneva 4*, рядом с Базиликой Нотр-Дам." },
+            { time: "22 Апр днём", title: "Прогулка", desc: "Озеро, Же-До, Цветочные часы и старый город." },
+            { time: "22 Апр вечер", title: "Ужин", desc: "Luigia для пиццы или Chez Ma Cousine для курицы с картошкой." },
+            { time: "23 Апр 10:00", title: "Ботанический сад", desc: "Оранжереи, вольеры и в 12:00 прогулка по озеру." },
+            { time: "24–25 Апр", title: "Вылет домой", desc: "Вылет Женева — Стамбул, затем 25 апреля вылет в Москву." }
+          ]
+        }
       ],
       budget: [
-        { item: "Отели", val: 972000, cls: "seg1" },
-        { item: "Авиабилеты", val: 246000, cls: "seg2" },
-        { item: "Аренда авто", val: 130000, cls: "seg3" },
-        { item: "Визы", val: 150000, cls: "seg4" },
-        { item: "Поезд Lyria", val: 50000, cls: "seg5" }
+        { item: "Отели", val: 972000, color: "#3b82f6" },
+        { item: "Авиабилеты", val: 246000, color: "#10b981" },
+        { item: "Аренда авто", val: 130000, color: "#f59e0b" },
+        { item: "Визы", val: 150000, color: "#8b5cf6" },
+        { item: "Поезд Lyria", val: 50000, color: "#ef4444" }
       ],
       tips: [
-        { cat: "Все", label: "💎 Самобытно", title: "Ферма альпийской икры", text: "Tropenhaus Frutigen — одна из самых необычных остановок маршрута, с дегустациями и рестораном." },
-        { cat: "Все", label: "⌚ Шопинг", title: "Часы в Люцерне", text: "Для спокойного выбора часов лучше планировать Люцерн, а не транзитные дни." },
-        { cat: "Все", label: "🍽️ Кухня", title: "Еда для детей", text: "В Швейцарии детям обычно хорошо заходят Älplermagronen и простые шницели с картофелем." },
-        { cat: "Все", label: "🍼 Дети", title: "Коляска и маршруты", text: "Площадь Вогезов, Тюильри и Риги — наиболее удобные точки для неспешного семейного темпа." }
+        { cat: "🍽️ Кухня", title: "Париж: классика жанра", text: "В Au Pied de Cochon закажите луковый суп. В Le Procope — coq au vin. За десертами: Angelina, Ladurée и эклеры Carette." },
+        { cat: "🍽️ Кухня", title: "Цюрих: сыр и мясо", text: "В Swiss Chuchi или похожем ресторане стоит взять фондю и Zürcher Geschnetzeltes с рёшти." },
+        { cat: "🍽️ Кухня", title: "Швейцарский детский хит", text: "Älplermagronen — почти идеальный детский comfort food: паста, сыр, картофель и яблочное пюре." },
+        { cat: "🍽️ Кухня", title: "Австрия: огромный шницель", text: "В Брегенце заказывайте венский шницель и Kaiserschmarrn — он обычно нравится детям с первого раза." },
+        { cat: "🍽️ Кухня", title: "Женева: простой семейный ужин", text: "Chez Ma Cousine — сильный вариант для детей, Luigia — когда хочется пиццу без экспериментов." },
+        { cat: "💎 Самобытно", title: "Ферма альпийской икры", text: "Tropenhaus Frutigen — редкая остановка по маршруту: осетры, дегустации и очень необычный контраст между Альпами и тропической теплицей." },
+        { cat: "⌚ Шопинг", title: "Часы для детей", text: "Для Дани можно смотреть Tissot PRX 35mm или TAG Heuer Formula 1. Для Дамира безопаснее Swatch или MoonSwatch." },
+        { cat: "⌚ Шопинг", title: "Смарт-часы для взрослых", text: "Tissot T-Touch Connect Solar — рациональный вариант, TAG Heuer Connected — более премиальный." },
+        { cat: "🚐 Логистика", title: "Минивэн V-Class", text: "Проверьте, что в бронировании именно класс Van 7–9 мест, иначе багаж и коляска создадут проблему." },
+        { cat: "🚐 Логистика", title: "TGV Lyria", text: "Лионский вокзал большой. На семейной логистике заложите минимум 40 минут запаса до отправления." },
+        { cat: "🍼 Дети", title: "Плоские маршруты", text: "Площадь Вогезов, сад Тюильри и гора Риги — одни из самых удобных точек маршрута для коляски." },
+        { cat: "🍼 Дети", title: "Музеи без перегруза", text: "С детьми лучше идти короткими заходами: 60–90 минут в музей, потом пауза на сладкое или площадку." }
       ]
     };
 
-    const tabs = document.querySelectorAll('.tab');
-    const sections = document.querySelectorAll('.section');
-    tabs.forEach(btn => btn.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      sections.forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }));
+    const APP_CONFIG = window.TRIP2026_CONFIG || {};
+    const CONCIERGE_API_URL = String(APP_CONFIG.conciergeApiUrl || '').trim();
+    const AI_READY = Boolean(CONCIERGE_API_URL) && !CONCIERGE_API_URL.includes('REPLACE-WITH-YOUR-VERCEL-PROJECT');
+    const aiConversation = [];
 
-    function fmt(n){ return n.toLocaleString('ru-RU') + ' ₽'; }
+    function rub(value) {
+      return value.toLocaleString('ru-RU') + ' ₽';
+    }
 
-    function renderPlan(){
-      const root = document.getElementById('plan');
-      root.innerHTML = appData.cities.map((city, idx) => `
-        <div class="card accordion" data-acc="${idx}">
-          <div class="accordion-head">
-            <div>
-              <div class="label">${city.dates}</div>
-              <h2 style="font-size:22px; margin:0;">${city.name}</h2>
-            </div>
-            <div class="plus">+</div>
-          </div>
-          <div class="accordion-body">
-            <div class="timeline">
-              ${city.events.map(ev => `
-                <div class="event">
-                  <div class="time">${ev.time}</div>
-                  <div><strong>${ev.title}</strong></div>
-                  <p class="muted">${ev.desc}</p>
-                </div>`).join('')}
-            </div>
-          </div>
-        </div>`).join('');
-      root.querySelectorAll('.accordion').forEach(a => {
-        a.querySelector('.accordion-head').addEventListener('click', () => a.classList.toggle('open'));
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function formatAiText(text) {
+      const safe = escapeHtml(text);
+      return safe
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function stripHtml(value) {
+      return String(value).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function showTab(id) {
+      document.querySelectorAll('.tab-section').forEach((section) => {
+        section.classList.toggle('hidden', section.id !== `section-${id}`);
+      });
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.tab === id);
       });
     }
 
-    function renderBudget(){
-      const total = appData.budget.reduce((s, x) => s + x.val, 0);
-      document.getElementById('budget-bar').innerHTML = appData.budget.map(x =>
-        `<div class="${x.cls}" style="width:${(x.val/total*100).toFixed(2)}%"></div>`).join('');
-      document.getElementById('budget-list').innerHTML = appData.budget.map(x => `
-        <div class="budget-item" style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
-          <div><strong>${x.item}</strong></div>
-          <div>${fmt(x.val)}</div>
-        </div>`).join('');
+    function renderPlan() {
+      const container = document.getElementById('plan-container');
+      container.innerHTML = appData.cities.map((city, index) => {
+        const eventsHtml = city.events.map((event) => `
+          <div class="timeline-item" style="color:${city.color}">
+            <span class="timeline-time">${escapeHtml(event.time)}</span>
+            <h3 class="timeline-title" style="color: var(--text);">${escapeHtml(event.title)}</h3>
+            <p class="timeline-desc">${escapeHtml(stripHtml(event.desc))}</p>
+          </div>
+        `).join('');
+
+        return `
+          <article class="accordion-item" data-accordion="${index}">
+            <div class="accordion-head">
+              <div>
+                <span class="accordion-dates" style="color:${city.color}">${escapeHtml(city.dates)}</span>
+                <h3 class="accordion-title">${escapeHtml(city.name)}</h3>
+              </div>
+              <div class="accordion-toggle">+</div>
+            </div>
+            <div class="accordion-body">
+              <div class="timeline">${eventsHtml}</div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.accordion-item').forEach((item) => {
+        item.querySelector('.accordion-head').addEventListener('click', () => {
+          item.classList.toggle('open');
+        });
+      });
     }
 
-    function renderTips(){
-      const categories = ['Все', '🍽️ Кухня', '⌚ Шопинг', '💎 Самобытно', '🍼 Дети'];
-      const filters = document.getElementById('tip-filters');
-      const list = document.getElementById('tips-list');
-      let current = 'Все';
+    function renderBudget() {
+      const total = appData.budget.reduce((sum, item) => sum + item.val, 0);
+      const list = document.getElementById('budget-list');
+      list.innerHTML = appData.budget.map((item) => {
+        const pct = ((item.val / total) * 100).toFixed(1);
+        return `
+          <div class="budget-item">
+            <div class="budget-item-top">
+              <div><span class="dot" style="background:${item.color}"></span><strong>${escapeHtml(item.item)}</strong></div>
+              <div><strong>${rub(item.val)}</strong> · <span class="subtle">${pct}%</span></div>
+            </div>
+            <div class="bar"><span style="width:${pct}%; background:${item.color};"></span></div>
+          </div>
+        `;
+      }).join('');
+    }
 
-      function paint(){
-        filters.innerHTML = categories.map(cat => `<button class="pill ${cat===current?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
-        const items = current === 'Все' ? appData.tips : appData.tips.filter(x => x.label === current);
-        list.innerHTML = items.map(t => `
-          <div class="tip">
-            <div class="label">${t.label}</div>
-            <div style="font-weight:800; margin-bottom:6px;">${t.title}</div>
-            <p class="muted">${t.text}</p>
-          </div>`).join('');
-        filters.querySelectorAll('.pill').forEach(btn => btn.addEventListener('click', () => { current = btn.dataset.cat; paint(); }));
+    function renderTips(filter = 'Все') {
+      const container = document.getElementById('tips-container');
+      const tips = filter === 'Все'
+        ? appData.tips
+        : appData.tips.filter((tip) => tip.cat.includes(filter));
+      container.innerHTML = tips.map((tip) => `
+        <article class="tip-card">
+          <span class="tip-cat">${escapeHtml(tip.cat)}</span>
+          <h3 class="tip-title">${escapeHtml(tip.title)}</h3>
+          <p class="tip-text">${escapeHtml(tip.text)}</p>
+        </article>
+      `).join('');
+    }
+
+    function renderTipFilters() {
+      const categories = ['Все', ...new Set(appData.tips.map((tip) => tip.cat))];
+      const row = document.getElementById('tip-filters');
+      row.innerHTML = categories.map((cat, i) => `
+        <button class="pill ${i === 0 ? 'active' : ''}" data-filter="${escapeHtml(cat)}">${escapeHtml(cat)}</button>
+      `).join('');
+      row.querySelectorAll('.pill').forEach((pill) => {
+        pill.addEventListener('click', () => {
+          row.querySelectorAll('.pill').forEach((p) => p.classList.remove('active'));
+          pill.classList.add('active');
+          renderTips(pill.dataset.filter);
+        });
+      });
+    }
+
+    function updateAiState() {
+      const warning = document.getElementById('concierge-warning');
+      const input = document.getElementById('ai-input');
+      const sendBtn = document.getElementById('send-btn');
+      const quickButtons = document.querySelectorAll('.quick-btn');
+      if (!AI_READY) {
+        warning.classList.remove('hidden');
+        warning.innerHTML = 'Консьерж ещё не подключён. Откройте файл <code>config.js</code> и вставьте URL вашего backend на Vercel в поле <code>conciergeApiUrl</code>, затем закоммитьте изменения в GitHub.';
+        input.disabled = true;
+        sendBtn.disabled = true;
+        quickButtons.forEach((btn) => btn.disabled = true);
+      } else {
+        warning.classList.add('hidden');
+        input.disabled = false;
+        sendBtn.disabled = false;
+        quickButtons.forEach((btn) => btn.disabled = false);
       }
-      paint();
     }
 
-    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    function addMessage(role, content, isLoading = false) {
+      const history = document.getElementById('ai-chat-history');
+      const el = document.createElement('div');
+      el.className = `message ${role === 'user' ? 'user' : 'bot'}${isLoading ? ' loading' : ''}`;
+      if (isLoading) {
+        el.textContent = content;
+      } else if (role === 'bot') {
+        el.innerHTML = formatAiText(content);
+      } else {
+        el.textContent = content;
+      }
+      history.appendChild(el);
+      history.scrollTop = history.scrollHeight;
+      return el;
+    }
+
+    function buildContext() {
+      return {
+        tripName: 'Европа 2026',
+        travelers: {
+          adults: 3,
+          children: [
+            { name: 'София', age: '11 месяцев' },
+            { name: 'Дамир', age: 7 },
+            { name: 'Даня', age: 10 }
+          ]
+        },
+        cities: appData.cities.map((city) => ({
+          name: city.name,
+          dates: city.dates,
+          events: city.events.map((event) => ({
+            time: event.time,
+            title: event.title,
+            desc: stripHtml(event.desc)
+          }))
+        })),
+        tips: appData.tips
+      };
+    }
+
+    async function callConcierge(question, history) {
+      const response = await fetch(CONCIERGE_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question,
+          history,
+          context: buildContext()
+        })
+      });
+
+      if (!response.ok) {
+        let text = '';
+        try { text = await response.text(); } catch (err) {}
+        throw new Error(text || `HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.answer || 'Не удалось получить ответ.';
+    }
+
+    async function askAI(question) {
+      if (!AI_READY || !question.trim()) return;
+      showTab('ai');
+      const cleanQuestion = question.trim();
+      const historyForRequest = aiConversation.slice(-8);
+      addMessage('user', cleanQuestion);
+      aiConversation.push({ role: 'user', content: cleanQuestion });
+      const loading = addMessage('bot', 'Думаю', true);
+
+      try {
+        const answer = await callConcierge(cleanQuestion, historyForRequest);
+        loading.classList.remove('loading');
+        loading.innerHTML = formatAiText(answer);
+        aiConversation.push({ role: 'assistant', content: answer });
+      } catch (error) {
+        console.error(error);
+        loading.classList.remove('loading');
+        loading.innerHTML = 'Не удалось связаться с консьержем. Проверьте URL backend в <code>config.js</code> и что проект на Vercel уже задеплоен.';
+      }
+
+      const history = document.getElementById('ai-chat-history');
+      history.scrollTop = history.scrollHeight;
+    }
+
+    function bindEvents() {
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => showTab(btn.dataset.tab));
+      });
+
+      document.getElementById('open-ai-banner').addEventListener('click', () => showTab('ai'));
+
+      document.querySelectorAll('.quick-btn').forEach((btn) => {
+        btn.addEventListener('click', () => askAI(btn.dataset.prompt || ''));
+      });
+
+      const input = document.getElementById('ai-input');
+      const sendBtn = document.getElementById('send-btn');
+      sendBtn.addEventListener('click', () => {
+        const value = input.value;
+        input.value = '';
+        askAI(value);
+      });
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          sendBtn.click();
+        }
+      });
+    }
+
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch((error) => {
+            console.error('Service worker error', error);
+          });
+        });
+      }
     }
 
     renderPlan();
     renderBudget();
-    renderTips();
+    renderTipFilters();
+    renderTips('Все');
+    bindEvents();
+    updateAiState();
+    registerServiceWorker();
   </script>
 </body>
 </html>
