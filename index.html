@@ -531,6 +531,134 @@
       font-size: 14px;
     }
 
+    .flight-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .flight-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .flight-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .flight-pnr {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+    .flight-pnr code {
+      font-size: 22px;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      background: transparent;
+      padding: 0;
+    }
+    .flight-passengers {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+    .flight-badge {
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: #edf8ee;
+      color: #16703e;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .flight-route {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      padding-top: 18px;
+      border-top: 1px dashed #dbe3ec;
+    }
+    .flight-leg:last-child {
+      text-align: right;
+    }
+    .flight-date,
+    .flight-terminal,
+    .flight-city {
+      color: var(--muted);
+    }
+    .flight-date {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .flight-code {
+      margin: 10px 0 0;
+      font-size: 44px;
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+    .flight-city {
+      margin-top: 8px;
+      font-size: 15px;
+    }
+    .flight-time {
+      margin-top: 12px;
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    .flight-mid {
+      min-width: 140px;
+      text-align: center;
+      color: #8a94a5;
+      font-weight: 800;
+    }
+    .flight-mid-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .flight-mid-line::before,
+    .flight-mid-line::after {
+      content: "";
+      width: 34px;
+      height: 2px;
+      border-radius: 999px;
+      background: #dde5ef;
+    }
+    .flight-mid-line span {
+      font-size: 28px;
+      color: #d1d9e5;
+      line-height: 1;
+    }
+    .flight-meta {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .flight-chip {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #fafbfc;
+      border: 1px solid var(--line);
+      font-size: 13px;
+      color: #506072;
+      font-weight: 700;
+    }
+
     @media (max-width: 900px) {
       .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
       .budget-wrap { grid-template-columns: 1fr; }
@@ -539,6 +667,19 @@
       .nav { flex-direction: column; align-items: stretch; padding: 10px 0 0; }
       .tabs { padding-left: 2px; }
       .brand { padding: 0 6px; }
+      .flight-route { grid-template-columns: 1fr; }
+      .flight-leg:last-child { text-align: left; }
+      .flight-mid {
+        min-width: 0;
+        text-align: left;
+      }
+      .flight-mid-line {
+        justify-content: flex-start;
+      }
+      .flight-top {
+        flex-direction: column;
+        align-items: start;
+      }
     }
   </style>
   <script src="./config.js"></script>
@@ -612,6 +753,16 @@
           </div>
         </div>
       </div>
+
+      <section style="margin-top: 18px;">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Перелёты</h2>
+            <p class="section-note">Все подтверждённые рейсы Pegasus по маршруту Москва → Стамбул → Париж → Женева → Стамбул → Москва.</p>
+          </div>
+        </div>
+        <div id="flight-list" class="flight-list"></div>
+      </section>
 
       <div class="overview-banner" id="open-ai-banner">
         <h3>Голодны до впечатлений? ✨</h3>
@@ -708,15 +859,61 @@
 
   <script>
     const appData = {
+      flights: [
+        {
+          pnr: "1Y8Q5T",
+          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
+          status: "Оформлен",
+          date: "9 апреля, чт",
+          flightNo: "PC389",
+          from: { code: "VKO", city: "Москва, Внуково", terminal: "Терминал A", time: "15:05" },
+          to: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "19:15" },
+          duration: "4 ч 10 мин",
+          note: "Ночной транзит перед рейсом в Париж."
+        },
+        {
+          pnr: "1YA7US",
+          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
+          status: "Оформлен",
+          date: "10 апреля, пт",
+          flightNo: "PC1133",
+          from: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "09:05" },
+          to: { code: "ORY", city: "Париж, Orly", terminal: "Терминал 4", time: "11:50" },
+          duration: "3 ч 45 мин",
+          note: "После прилёта удобно брать такси до Novotel Paris Les Halles."
+        },
+        {
+          pnr: "1YBJXL",
+          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
+          status: "Оформлен",
+          date: "24 апреля, пт",
+          flightNo: "PC954",
+          from: { code: "GVA", city: "Женева", terminal: "Терминал 1", time: "14:15" },
+          to: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "18:20" },
+          duration: "3 ч 5 мин",
+          note: "Это первый сегмент обратного пути домой."
+        },
+        {
+          pnr: "1Y8Q5T",
+          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
+          status: "Оформлен",
+          date: "25 апреля, сб",
+          flightNo: "PC388",
+          from: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "09:50" },
+          to: { code: "VKO", city: "Москва, Внуково", terminal: "Терминал A", time: "14:00" },
+          duration: "4 ч 10 мин",
+          note: "Финальный перелёт обратно в Москву."
+        }
+      ],
       cities: [
         {
           name: "🇹🇷 Стамбул",
           dates: "9–10 апреля",
           color: "#64748b",
           events: [
-            { time: "9 Апр 15:05", title: "Вылет из Москвы", desc: "Перелёт Москва — Стамбул, прибытие около 19:10." },
+            { time: "9 Апр 15:05", title: "Вылет из Москвы", desc: "Pegasus PC389: Москва, Внуково (терминал A) — Стамбул, SAW (Main). Вылет в 15:05, прилёт в 19:15, в пути 4 часа 10 минут. PNR 1Y8Q5T." },
             { time: "9 Апр 20:00", title: "Заселение в отель", desc: "ISG Sabiha Gökçen Airport Hotel 4*. Ужин и отдых перед следующим перелётом." },
-            { time: "10 Апр 09:05", title: "Вылет в Париж", desc: "Перелёт Стамбул — Париж (Орли), прибытие в 11:50." }
+            { time: "10 Апр 09:05", title: "Вылет в Париж", desc: "Pegasus PC1133: Стамбул, SAW (Main) — Париж, Orly (терминал 4). Вылет в 09:05, прилёт в 11:50, в пути 3 часа 45 минут. PNR 1YA7US." }
           ]
         },
         {
@@ -775,7 +972,8 @@
             { time: "22 Апр днём", title: "Прогулка", desc: "Озеро, Же-До, Цветочные часы и старый город." },
             { time: "22 Апр вечер", title: "Ужин", desc: "Luigia для пиццы или Chez Ma Cousine для курицы с картошкой." },
             { time: "23 Апр 10:00", title: "Ботанический сад", desc: "Оранжереи, вольеры и в 12:00 прогулка по озеру." },
-            { time: "24–25 Апр", title: "Вылет домой", desc: "Вылет Женева — Стамбул, затем 25 апреля вылет в Москву." }
+            { time: "24 Апр 14:15", title: "Вылет в Стамбул", desc: "Pegasus PC954: Женева (терминал 1) — Стамбул, SAW (Main). Вылет в 14:15, прилёт в 18:20, в пути 3 часа 5 минут. PNR 1YBJXL." },
+            { time: "25 Апр 09:50", title: "Финальный вылет в Москву", desc: "Pegasus PC388: Стамбул, SAW (Main) — Москва, Внуково (терминал A). Вылет в 09:50, прилёт в 14:00, в пути 4 часа 10 минут. PNR 1Y8Q5T." }
           ]
         }
       ],
@@ -874,6 +1072,44 @@
       });
     }
 
+    function renderFlights() {
+      const container = document.getElementById('flight-list');
+      container.innerHTML = appData.flights.map((flight) => `
+        <article class="flight-card">
+          <div class="flight-top">
+            <div>
+              <div class="flight-pnr">PNR <code>${escapeHtml(flight.pnr)}</code></div>
+              <div class="flight-passengers">${escapeHtml(flight.passengers)}</div>
+            </div>
+            <div class="flight-badge">${escapeHtml(flight.status)}</div>
+          </div>
+          <div class="flight-route">
+            <div class="flight-leg">
+              <div class="flight-date">${escapeHtml(flight.date)} · ${escapeHtml(flight.from.terminal)}</div>
+              <div class="flight-code">${escapeHtml(flight.from.code)}</div>
+              <div class="flight-city">${escapeHtml(flight.from.city)}</div>
+              <div class="flight-time">${escapeHtml(flight.from.time)}</div>
+            </div>
+            <div class="flight-mid">
+              <div>${escapeHtml(flight.flightNo)}</div>
+              <div class="flight-mid-line">${escapeHtml(flight.duration)} <span>→</span></div>
+            </div>
+            <div class="flight-leg">
+              <div class="flight-date">${escapeHtml(flight.date)} · ${escapeHtml(flight.to.terminal)}</div>
+              <div class="flight-code">${escapeHtml(flight.to.code)}</div>
+              <div class="flight-city">${escapeHtml(flight.to.city)}</div>
+              <div class="flight-time">${escapeHtml(flight.to.time)}</div>
+            </div>
+          </div>
+          <div class="flight-meta">
+            <span class="flight-chip">Pegasus ${escapeHtml(flight.flightNo)}</span>
+            <span class="flight-chip">${escapeHtml(flight.duration)}</span>
+            <span class="flight-chip">${escapeHtml(flight.note)}</span>
+          </div>
+        </article>
+      `).join('');
+    }
+
     function renderBudget() {
       const total = appData.budget.reduce((sum, item) => sum + item.val, 0);
       const list = document.getElementById('budget-list');
@@ -966,6 +1202,7 @@
             { name: 'Даня', age: 10 }
           ]
         },
+        flights: appData.flights,
         cities: appData.cities.map((city) => ({
           name: city.name,
           dates: city.dates,
@@ -1061,6 +1298,7 @@
     }
 
     renderPlan();
+    renderFlights();
     renderBudget();
     renderTipFilters();
     renderTips('Все');
