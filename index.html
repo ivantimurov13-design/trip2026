@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Европа 2026 — PWA</title>
+  <meta name="theme-color" content="#b7791f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Европа '26" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="description" content="Семейный путеводитель по поездке Европа 2026" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #b7791f;
+      --accent-soft: #f7e7c5;
+      --ok: #eef6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+    .nav {
+      position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+      padding-top: env(safe-area-inset-top);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px;
+    }
+    .brand { font-weight: 800; letter-spacing: -.02em; }
+    .tabs { display: flex; gap: 10px; overflow: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      white-space: nowrap; background: transparent; border: 0; padding: 18px 4px 14px;
+      color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      border-bottom: 3px solid transparent;
+    }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .hero, .card { background: var(--card); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 4px 18px rgba(0,0,0,.03); }
+    .hero { padding: 24px; margin-top: 20px; }
+    h1 { margin: 0 0 10px; font-size: 34px; line-height: 1.05; }
+    h2 { margin: 0 0 8px; font-size: 24px; }
+    p { margin: 0; line-height: 1.55; }
+    .muted { color: var(--muted); }
+    .stats, .grid-2 { display: grid; gap: 12px; }
+    .stats { grid-template-columns: repeat(2,1fr); margin-top: 18px; }
+    .grid-2 { grid-template-columns: 1fr; margin-top: 16px; }
+    .stat, .budget-item { background: #f9fafb; border-radius: 18px; padding: 14px; }
+    .stat.highlight { background: #fff7e7; }
+    .label { display: block; color: var(--muted); font-size: 12px; text-transform: uppercase; margin-bottom: 4px; }
+    .value { font-weight: 800; }
+    .section { display: none; margin-top: 20px; }
+    .section.active { display: block; }
+    .stack { display: grid; gap: 14px; }
+    .card { padding: 18px; }
+    .booking { margin-top: 14px; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 16px; background: #f8fafc; }
+    .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
+    .accordion-head { display:flex; justify-content:space-between; align-items:center; gap:12px; cursor:pointer; }
+    .accordion-body { display:none; padding-top: 14px; }
+    .accordion.open .accordion-body { display:block; }
+    .plus {
+      width: 30px; height: 30px; border-radius: 999px; display:grid; place-items:center; background:#f3f4f6; color:#4b5563; font-size:22px;
+      flex: 0 0 30px;
+    }
+    .timeline { border-left: 2px solid #d6b06b; margin-left: 6px; padding-left: 16px; display:grid; gap:16px; }
+    .event { position: relative; }
+    .event::before {
+      content:""; position:absolute; left:-23px; top:6px; width:10px; height:10px; border-radius:999px; background:#d6b06b;
+    }
+    .time { color: var(--muted); font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    .budget-bar { margin-top: 12px; border-radius: 999px; overflow: hidden; height: 14px; background:#eef2f7; display:flex; }
+    .seg1{background:#4f46e5}.seg2{background:#10b981}.seg3{background:#f59e0b}.seg4{background:#8b5cf6}.seg5{background:#ef4444}
+    .tip { background: var(--card); border:1px solid var(--line); border-radius: 22px; padding: 18px; }
+    .pill-row { display:flex; gap:8px; overflow:auto; padding-bottom: 4px; scrollbar-width:none; }
+    .pill-row::-webkit-scrollbar { display:none; }
+    .pill { border:0; background:#eceff3; color:#475569; padding:10px 14px; border-radius:999px; font-weight:700; white-space:nowrap; }
+    .pill.active { background: var(--accent); color:#fff; }
+    .install-box { background: linear-gradient(135deg, #b7791f, #d9a441); color:#fff; margin-top: 18px; }
+    .install-box p { color: rgba(255,255,255,.92); }
+    .footer { text-align:center; color:var(--muted); font-size:12px; margin: 28px 0 8px; }
+    .inline-list { display:grid; gap:12px; }
+    @media (min-width: 740px){
+      .stats { grid-template-columns: repeat(4,1fr); }
+      .grid-2 { grid-template-columns: repeat(2,1fr); }
+      .inline-list { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">Европа '26</div>
+      <div class="tabs">
+        <button class="tab active" data-tab="overview">Обзор</button>
+        <button class="tab" data-tab="plan">План</button>
+        <button class="tab" data-tab="budget">Бюджет</button>
+        <button class="tab" data-tab="tips">Советы</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section id="overview" class="section active">
+      <div class="hero">
+        <h1>Большое семейное путешествие</h1>
+        <p class="muted">Маршрут для 6 человек: 3 взрослых и 3 детей. Версия под iPhone с возможностью установки на экран «Домой».</p>
+        <div class="stats">
+          <div class="stat"><span class="label">Старт</span><span class="value">9 апреля</span></div>
+          <div class="stat"><span class="label">Финиш</span><span class="value">25 апреля</span></div>
+          <div class="stat"><span class="label">Стран</span><span class="value">4 государства</span></div>
+          <div class="stat highlight"><span class="label">Бюджет</span><span class="value">1.55 млн ₽</span></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h2>🏨 Отель в Париже</h2>
+          <p><strong>Novotel Paris Les Halles</strong></p>
+          <p class="muted">10–14 апреля</p>
+          <div class="booking">
+            <span class="label">Бронирование</span>
+            <div class="code">PWJLDJKC</div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>🚄 Переезд 14.04</h2>
+          <p><strong>TGV Lyria 9211</strong></p>
+          <p class="muted">Париж → Цюрих</p>
+          <div class="inline-list" style="margin-top:14px;">
+            <div class="stat"><span class="label">Выезд</span><span class="value">10:22</span></div>
+            <div class="stat"><span class="label">Класс</span><span class="value">1-й, Semi Flex</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card install-box">
+        <h2>Добавить на экран iPhone</h2>
+        <p>Откройте страницу в Safari → Поделиться → На экран «Домой». После этого гид будет запускаться почти как приложение.</p>
+      </div>
+    </section>
+
+    <section id="plan" class="section"></section>
+
+    <section id="budget" class="section">
+      <div class="card">
+        <h2>Визуализация расходов</h2>
+        <p class="muted">Офлайн-версия без библиотек, поэтому вместо диаграммы — компактная полоса и разбивка по статьям.</p>
+        <div class="budget-bar" id="budget-bar"></div>
+        <div class="stack" id="budget-list" style="margin-top:16px;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:18px; border-top:1px solid var(--line); font-weight:800;">
+          <span>Итого</span>
+          <span>1 548 000 ₽</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="tips" class="section">
+      <div class="pill-row" id="tip-filters"></div>
+      <div class="stack" id="tips-list" style="margin-top:16px;"></div>
+    </section>
+
+    <div class="footer">
+      Для установки как PWA страницу нужно открывать не как локальный файл, а по ссылке через HTTPS или локальный сервер.
+    </div>
+  </main>
+
+  <script>
+    const appData = {
+      cities: [
+        { name: "🇹🇷 Стамбул", dates: "9–10 апреля", events: [
+          { time: "9 апр 15:05", title: "Вылет из Москвы", desc: "Перелёт Москва – Стамбул, прибытие около 19:10." },
+          { time: "9 апр 20:00", title: "Заселение", desc: "ISG Sabiha Gökçen Airport Hotel 4*. Ужин и отдых." },
+          { time: "10 апр 09:05", title: "Вылет в Париж", desc: "Перелёт Стамбул – Париж (Орли), прибытие в 11:50." }
+        ]},
+        { name: "🇫🇷 Париж", dates: "10–14 апреля", events: [
+          { time: "10 апр 14:00", title: "Заселение и прогулка", desc: "Novotel Paris Les Halles, затем Пале-Рояль, Опера, Галерея Лафайет." },
+          { time: "11 апр 10:00", title: "Авто-тур и Маре", desc: "Обзорный проезд, затем спокойная прогулка по Маре и площади Вогезов." },
+          { time: "12 апр 10:00", title: "Тюильри и Елисейские поля", desc: "Сад Тюильри, Angelina, затем Елисейские поля и Триумфальная арка." },
+          { time: "13 апр 10:00", title: "Эйфелева башня и левый берег", desc: "Фото, Rue Cler, затем Люксембургский сад." },
+          { time: "14 апр 10:22", title: "Поезд TGV Lyria", desc: "Переезд Париж → Цюрих, 1-й класс." }
+        ]},
+        { name: "🇨🇭 Цюрих", dates: "14–16 апреля", events: [
+          { time: "14 апр 15:00", title: "Заселение", desc: "Best Western Plus Zürcherhof." },
+          { time: "14 апр 16:00", title: "Старый город", desc: "Прогулка и ужин со швейцарской классикой." },
+          { time: "15 апр 14:00", title: "Музей и вода", desc: "Нацмузей и прогулка на кораблике." },
+          { time: "16 апр 10:00", title: "Аренда авто", desc: "Получение минивэна." }
+        ]},
+        { name: "🇦🇹 Брегенц и Лихтенштейн", dates: "16–18 апреля", events: [
+          { time: "16 апр", title: "Заселение", desc: "Grand Hotel Bregenz." },
+          { time: "17 апр", title: "Фельдкирх и Вадуц", desc: "Старый город, замок Вадуц, княжеская винодельня." },
+          { time: "18 апр", title: "Переезд", desc: "Выезд в Люцерн." }
+        ]},
+        { name: "🇨🇭 Люцерн и Зигрисвиль", dates: "18–22 апреля", events: [
+          { time: "18 апр", title: "Люцерн", desc: "Лев, Ледниковый сад и магазины часов." },
+          { time: "19 апр", title: "Гора Риги", desc: "Хорошая локация для семьи с коляской." },
+          { time: "19 апр", title: "Зигрисвиль", desc: "Solbadhotel Sigriswil, полупансион." },
+          { time: "20–21 апр", title: "Альпы и Tropenhaus Frutigen", desc: "Подъёмник Niederhorn и поездка на ферму альпийской икры." }
+        ]},
+        { name: "🇨🇭 Женева", dates: "22–25 апреля", events: [
+          { time: "22 апр", title: "Прибытие", desc: "Hotel Rotary Geneva, прогулка по озеру и старому городу." },
+          { time: "23 апр", title: "Ботанический сад", desc: "Оранжереи, животные и круиз по озеру." },
+          { time: "24–25 апр", title: "Обратный путь", desc: "Женева → Стамбул → Москва." }
+        ]}
+      ],
+      budget: [
+        { item: "Отели", val: 972000, cls: "seg1" },
+        { item: "Авиабилеты", val: 246000, cls: "seg2" },
+        { item: "Аренда авто", val: 130000, cls: "seg3" },
+        { item: "Визы", val: 150000, cls: "seg4" },
+        { item: "Поезд Lyria", val: 50000, cls: "seg5" }
+      ],
+      tips: [
+        { cat: "Все", label: "💎 Самобытно", title: "Ферма альпийской икры", text: "Tropenhaus Frutigen — одна из самых необычных остановок маршрута, с дегустациями и рестораном." },
+        { cat: "Все", label: "⌚ Шопинг", title: "Часы в Люцерне", text: "Для спокойного выбора часов лучше планировать Люцерн, а не транзитные дни." },
+        { cat: "Все", label: "🍽️ Кухня", title: "Еда для детей", text: "В Швейцарии детям обычно хорошо заходят Älplermagronen и простые шницели с картофелем." },
+        { cat: "Все", label: "🍼 Дети", title: "Коляска и маршруты", text: "Площадь Вогезов, Тюильри и Риги — наиболее удобные точки для неспешного семейного темпа." }
+      ]
+    };
+
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.section');
+    tabs.forEach(btn => btn.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }));
+
+    function fmt(n){ return n.toLocaleString('ru-RU') + ' ₽'; }
+
+    function renderPlan(){
+      const root = document.getElementById('plan');
+      root.innerHTML = appData.cities.map((city, idx) => `
+        <div class="card accordion" data-acc="${idx}">
+          <div class="accordion-head">
+            <div>
+              <div class="label">${city.dates}</div>
+              <h2 style="font-size:22px; margin:0;">${city.name}</h2>
+            </div>
+            <div class="plus">+</div>
+          </div>
+          <div class="accordion-body">
+            <div class="timeline">
+              ${city.events.map(ev => `
+                <div class="event">
+                  <div class="time">${ev.time}</div>
+                  <div><strong>${ev.title}</strong></div>
+                  <p class="muted">${ev.desc}</p>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>`).join('');
+      root.querySelectorAll('.accordion').forEach(a => {
+        a.querySelector('.accordion-head').addEventListener('click', () => a.classList.toggle('open'));
+      });
+    }
+
+    function renderBudget(){
+      const total = appData.budget.reduce((s, x) => s + x.val, 0);
+      document.getElementById('budget-bar').innerHTML = appData.budget.map(x =>
+        `<div class="${x.cls}" style="width:${(x.val/total*100).toFixed(2)}%"></div>`).join('');
+      document.getElementById('budget-list').innerHTML = appData.budget.map(x => `
+        <div class="budget-item" style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+          <div><strong>${x.item}</strong></div>
+          <div>${fmt(x.val)}</div>
+        </div>`).join('');
+    }
+
+    function renderTips(){
+      const categories = ['Все', '🍽️ Кухня', '⌚ Шопинг', '💎 Самобытно', '🍼 Дети'];
+      const filters = document.getElementById('tip-filters');
+      const list = document.getElementById('tips-list');
+      let current = 'Все';
+
+      function paint(){
+        filters.innerHTML = categories.map(cat => `<button class="pill ${cat===current?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
+        const items = current === 'Все' ? appData.tips : appData.tips.filter(x => x.label === current);
+        list.innerHTML = items.map(t => `
+          <div class="tip">
+            <div class="label">${t.label}</div>
+            <div style="font-weight:800; margin-bottom:6px;">${t.title}</div>
+            <p class="muted">${t.text}</p>
+          </div>`).join('');
+        filters.querySelectorAll('.pill').forEach(btn => btn.addEventListener('click', () => { current = btn.dataset.cat; paint(); }));
+      }
+      paint();
+    }
+
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+
+    renderPlan();
+    renderBudget();
+    renderTips();
+  </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "Европа 2026",
+  "short_name": "Европа '26",
+  "description": "Семейный путеводитель по поездке Европа 2026",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f4ee",
+  "theme_color": "#b7791f",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
