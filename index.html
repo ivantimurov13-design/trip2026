@@ -609,11 +609,20 @@
       margin-top: 18px;
     }
     .flight-card {
+      position: relative;
+      overflow: hidden;
       padding: 22px;
       border-radius: 24px;
       background: var(--card);
       border: 1px solid var(--line);
       box-shadow: var(--shadow);
+    }
+    .flight-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: #d6eadb;
     }
     .flight-top {
       display: flex;
@@ -626,9 +635,9 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
-      letter-spacing: 0.03em;
+      letter-spacing: 0;
     }
     .flight-pnr code {
       font-size: 22px;
@@ -649,6 +658,14 @@
       font-size: 14px;
       font-weight: 800;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .flight-badge::before {
+      content: "✓";
+      font-size: 16px;
+      line-height: 1;
     }
     .flight-route {
       display: grid;
@@ -938,67 +955,73 @@
       flights: [
         {
           pnr: "1Y8Q5T",
-          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
-          status: "Оформлен",
+          passengers: "3 Adult(s), 2 Child(ren), 1 Infant(s)",
+          status: "Ticketed",
+          airline: "Pegasus",
           date: "18 апреля, сб",
           flightNo: "PC389",
-          from: { code: "VKO", city: "Москва, Внуково", terminal: "Терминал A", time: "15:05" },
-          to: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "19:15" },
+          from: { code: "VKO", city: "Moscow-Vnukovo", terminal: "A", time: "15:05" },
+          to: { code: "SAW", city: "Istanbul Sabiha Gokcen", terminal: "Main", time: "19:15" },
           duration: "4 ч 10 мин",
           note: "Старт поездки и ночёвка у аэропорта SAW перед перелётом в Париж."
         },
         {
           pnr: "1YA7US",
-          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
-          status: "Оформлен",
+          passengers: "3 Adult(s), 2 Child(ren), 1 Infant(s)",
+          status: "Ticketed",
+          airline: "Pegasus",
           date: "19 апреля, вс",
           flightNo: "PC1133",
-          from: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "09:05" },
-          to: { code: "ORY", city: "Париж, Orly", terminal: "Терминал 4", time: "11:50" },
+          from: { code: "SAW", city: "Istanbul Sabiha Gokcen", terminal: "Main", time: "09:05" },
+          to: { code: "ORY", city: "Paris-Orly", terminal: "4", time: "11:50" },
           duration: "3 ч 45 мин",
           note: "Утренний перелёт в Париж после спокойного завтрака в ISG Sabiha Gokcen Airport Hotel."
         },
         {
           pnr: "см. билет",
-          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
-          status: "Оформлен",
+          passengers: "3 Adult(s), 2 Child(ren), 1 Infant(s)",
+          status: "Ticketed",
+          airline: "Wizz Air",
           date: "2 мая, сб",
           flightNo: "W6 1372",
-          from: { code: "EIN", city: "Эйндховен", terminal: "по билету", time: "15:30" },
-          to: { code: "WAW", city: "Варшава", terminal: "по билету", time: "17:25" },
+          from: { code: "EIN", city: "Eindhoven", terminal: "by ticket", time: "15:30" },
+          to: { code: "WAW", city: "Warsaw", terminal: "by ticket", time: "17:25" },
           duration: "1 ч 55 мин",
           note: "Wizz Air после сдачи Dacia Jogger в аэропорту Эйндховена."
         },
         {
           pnr: "1YBJXL",
-          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
-          status: "Оформлен",
+          passengers: "3 Adult(s), 2 Child(ren), 1 Infant(s)",
+          status: "Ticketed",
+          airline: "Pegasus",
           date: "7 мая, чт",
           flightNo: "PC1540",
-          from: { code: "WAW", city: "Варшава", terminal: "Терминал A", time: "09:40" },
-          to: { code: "ADB", city: "Измир", terminal: "Терминал Main", time: "13:15" },
+          from: { code: "WAW", city: "Warsaw", terminal: "A", time: "09:40" },
+          to: { code: "ADB", city: "Izmir", terminal: "Main", time: "13:15" },
           duration: "2 ч 35 мин",
           note: "Первый сегмент обратного пути: Варшава → Измир."
         },
         {
           pnr: "1YBJXL",
-          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
-          status: "Оформлен",
+          passengers: "3 Adult(s), 2 Child(ren), 1 Infant(s)",
+          status: "Ticketed",
+          airline: "Pegasus",
           date: "7 мая, чт",
           flightNo: "PC2195",
-          from: { code: "ADB", city: "Измир", terminal: "Терминал Main", time: "15:25" },
-          to: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "16:35" },
+          from: { code: "ADB", city: "Izmir", terminal: "Main", time: "15:25" },
+          to: { code: "SAW", city: "Istanbul Sabiha Gokcen", terminal: "Main", time: "16:35" },
           duration: "1 ч 10 мин",
           note: "Второй сегмент в Стамбул перед ночёвкой у аэропорта."
         },
         {
           pnr: "1Y8Q5T",
-          passengers: "3 взрослых, 2 ребёнка, 1 младенец",
-          status: "Оформлен",
+          passengers: "3 Adult(s), 2 Child(ren), 1 Infant(s)",
+          status: "Ticketed",
+          airline: "Pegasus",
           date: "8 мая, пт",
           flightNo: "PC388",
-          from: { code: "SAW", city: "Стамбул, Sabiha Gokcen", terminal: "Терминал Main", time: "09:50" },
-          to: { code: "VKO", city: "Москва, Внуково", terminal: "Терминал A", time: "14:00" },
+          from: { code: "SAW", city: "Istanbul Sabiha Gokcen", terminal: "Main", time: "09:50" },
+          to: { code: "VKO", city: "Moscow-Vnukovo", terminal: "A", time: "14:00" },
           duration: "4 ч 10 мин",
           note: "Финальный перелёт домой. Во Внуково возможна повышенная загрузка перед 9 мая."
         }
@@ -1218,14 +1241,15 @@
         <article class="flight-card">
           <div class="flight-top">
             <div>
-              <div class="flight-pnr">PNR <code>${escapeHtml(flight.pnr)}</code></div>
+              <div class="flight-pnr">Rez. (PNR) No: <code>${escapeHtml(flight.pnr)}</code></div>
               <div class="flight-passengers">${escapeHtml(flight.passengers)}</div>
             </div>
             <div class="flight-badge">${escapeHtml(flight.status)}</div>
           </div>
           <div class="flight-route">
             <div class="flight-leg">
-              <div class="flight-date">${escapeHtml(flight.date)} · ${escapeHtml(flight.from.terminal)}</div>
+              <div class="flight-date">${escapeHtml(flight.date)}</div>
+              <div class="flight-city">Terminal: ${escapeHtml(flight.from.terminal)}</div>
               <div class="flight-code">${escapeHtml(flight.from.code)}</div>
               <div class="flight-city">${escapeHtml(flight.from.city)}</div>
               <div class="flight-time">${escapeHtml(flight.from.time)}</div>
@@ -1235,14 +1259,15 @@
               <div class="flight-mid-line">${escapeHtml(flight.duration)} <span>→</span></div>
             </div>
             <div class="flight-leg">
-              <div class="flight-date">${escapeHtml(flight.date)} · ${escapeHtml(flight.to.terminal)}</div>
+              <div class="flight-date">${escapeHtml(flight.date)}</div>
+              <div class="flight-city">Terminal: ${escapeHtml(flight.to.terminal)}</div>
               <div class="flight-code">${escapeHtml(flight.to.code)}</div>
               <div class="flight-city">${escapeHtml(flight.to.city)}</div>
               <div class="flight-time">${escapeHtml(flight.to.time)}</div>
             </div>
           </div>
           <div class="flight-meta">
-            <span class="flight-chip">Pegasus ${escapeHtml(flight.flightNo)}</span>
+            <span class="flight-chip">${escapeHtml(flight.airline || 'Flight')} ${escapeHtml(flight.flightNo)}</span>
             <span class="flight-chip">${escapeHtml(flight.duration)}</span>
             <span class="flight-chip">${escapeHtml(flight.note)}</span>
           </div>
