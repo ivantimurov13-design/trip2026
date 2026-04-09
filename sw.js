@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trip2026-openai-v1';
+const CACHE_NAME = 'trip2026-openai-v2';
 const CORE_ASSETS = [
   './',
   './index.html',
