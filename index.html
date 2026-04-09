@@ -215,11 +215,19 @@
 
     .accordion-list { display: grid; gap: 14px; }
     .accordion-item {
+      position: relative;
       border-radius: 26px;
       overflow: hidden;
       border: 1px solid var(--line);
       background: var(--card);
       box-shadow: var(--shadow);
+    }
+    .accordion-item::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--city, var(--accent)), color-mix(in srgb, var(--city, var(--accent)) 35%, white));
     }
     .accordion-head {
       display: flex;
@@ -228,11 +236,34 @@
       gap: 16px;
       padding: 22px;
       cursor: pointer;
+      background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--city, #d1953f) 12%, white) 0, transparent 32%),
+        linear-gradient(180deg, color-mix(in srgb, var(--city, #d1953f) 6%, white) 0%, rgba(255,255,255,0) 75%);
     }
     .accordion-head:hover { background: #fbfcfe; }
+    .accordion-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .accordion-stage {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--city, #d1953f) 14%, white);
+      color: color-mix(in srgb, var(--city, #d1953f) 88%, #213042);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
     .accordion-dates {
-      display: block;
-      margin-bottom: 6px;
+      display: inline-block;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.12em;
@@ -291,7 +322,8 @@
       max-height: 0;
       overflow: hidden;
       transition: max-height .35s ease, padding .35s ease;
-      background: #fafbfc;
+      background:
+        linear-gradient(180deg, color-mix(in srgb, var(--city, #d1953f) 4%, #fafbfc) 0%, #fafbfc 18%, #f7f9fc 100%);
       border-top: 0 solid transparent;
       padding: 0 22px;
     }
@@ -300,7 +332,7 @@
       padding: 6px 22px 22px;
       border-top: 1px solid var(--line);
     }
-    .timeline { display: grid; gap: 22px; }
+    .timeline { display: grid; gap: 18px; }
     .timeline-item {
       position: relative;
       padding: 4px 0 0 22px;
@@ -320,6 +352,16 @@
       border-radius: 999px;
       background: currentColor;
       box-shadow: 0 0 0 5px rgba(255,255,255,0.9);
+    }
+    .timeline-card {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #e6ecf3;
+      border-radius: 22px;
+      padding: 16px 18px 16px;
+      box-shadow: 0 8px 24px rgba(36, 48, 65, 0.05);
+    }
+    .timeline-chip-row {
+      margin: 0 0 10px;
     }
     .timeline-time {
       display: block;
@@ -1132,19 +1174,24 @@
 
           return `
           <div class="timeline-item" style="color:${city.color}">
-            <span class="timeline-time">${escapeHtml(event.time)}</span>
-            ${chips ? `<div class="timeline-chip-row">${chips}</div>` : ''}
-            <h3 class="timeline-title" style="color: var(--text);">${escapeHtml(event.title)}</h3>
-            <p class="timeline-desc">${escapeHtml(stripHtml(event.desc))}</p>
+            <div class="timeline-card">
+              <span class="timeline-time">${escapeHtml(event.time)}</span>
+              ${chips ? `<div class="timeline-chip-row">${chips}</div>` : ''}
+              <h3 class="timeline-title" style="color: var(--text);">${escapeHtml(event.title)}</h3>
+              <p class="timeline-desc">${escapeHtml(stripHtml(event.desc))}</p>
+            </div>
           </div>
         `;
         }).join('');
 
         return `
-          <article class="accordion-item" data-accordion="${index}">
+          <article class="accordion-item" data-accordion="${index}" style="--city:${city.color}">
             <div class="accordion-head">
               <div>
-                <span class="accordion-dates" style="color:${city.color}">${escapeHtml(city.dates)}</span>
+                <div class="accordion-meta">
+                  <span class="accordion-stage">Этап ${index + 1}</span>
+                  <span class="accordion-dates" style="color:${city.color}">${escapeHtml(city.dates)}</span>
+                </div>
                 <h3 class="accordion-title">${escapeHtml(city.name)}</h3>
                 ${city.blurb ? `<p class="accordion-blurb">${escapeHtml(city.blurb)}</p>` : ''}
                 ${highlightsHtml ? `<div class="accordion-chip-row">${highlightsHtml}</div>` : ''}
