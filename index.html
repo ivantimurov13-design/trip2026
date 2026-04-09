@@ -602,6 +602,74 @@
       color: var(--muted);
       font-size: 14px;
     }
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .scene-card {
+      position: relative;
+      min-height: 180px;
+      border-radius: 24px;
+      overflow: hidden;
+      padding: 18px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      box-shadow: var(--shadow);
+    }
+    .scene-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(12, 18, 28, 0.04) 0%, rgba(12, 18, 28, 0.7) 100%);
+    }
+    .scene-card > * {
+      position: relative;
+      z-index: 1;
+    }
+    .scene-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 800;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+    .scene-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+    }
+    .scene-copy {
+      margin: 10px 0 0;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.9);
+    }
+    .scene-card.paris {
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.22) 0, transparent 30%),
+        linear-gradient(135deg, #4338ca 0%, #7c3aed 45%, #d97706 100%);
+    }
+    .scene-card.amsterdam {
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.18) 0, transparent 28%),
+        linear-gradient(135deg, #14532d 0%, #0f766e 46%, #f59e0b 100%);
+    }
+    .scene-card.road {
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.18) 0, transparent 28%),
+        linear-gradient(135deg, #166534 0%, #15803d 40%, #0ea5e9 100%);
+    }
+    .scene-card.warsaw {
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.2) 0, transparent 30%),
+        linear-gradient(135deg, #1d4ed8 0%, #475569 50%, #b45309 100%);
+    }
 
     .flight-list {
       display: grid;
@@ -749,7 +817,7 @@
     }
 
     @media (max-width: 900px) {
-      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .grid-4, .grid-3, .grid-2, .scene-grid { grid-template-columns: 1fr; }
       .budget-wrap { grid-template-columns: 1fr; }
       .message.user { margin-left: 14px; }
       .message.bot { margin-right: 14px; }
@@ -813,6 +881,28 @@
         <div style="margin-top: 18px; padding: 16px 18px; border-radius: 20px; background: #faf6ee; border: 1px solid #f1dfb8;">
           <div class="stat-label" style="margin-bottom: 8px; color: #946200;">Философия маршрута</div>
           <div style="font-weight: 700; line-height: 1.65;">Правило одного большого дела: утром — главный акцент дня, после обеда — сад, прогулка, рынок или красивый ужин. Благодаря этому поездка читается как медленное путешествие со вкусом, а не как бесконечный чеклист.</div>
+        </div>
+        <div class="scene-grid">
+          <article class="scene-card paris">
+            <div class="scene-kicker">Париж</div>
+            <h3 class="scene-title">Грюйер, эклеры и вечерний свет</h3>
+            <p class="scene-copy">Rue Montorgueil, эклеры Stohrer, луковый суп под сырной коркой и терраса Galeries Lafayette перед ужином.</p>
+          </article>
+          <article class="scene-card amsterdam">
+            <div class="scene-kicker">Амстердам</div>
+            <h3 class="scene-title">Каналы, блины и крафт у мельницы</h3>
+            <p class="scene-copy">NEMO, IJwit в Brouwerij 't IJ, тихий Иордан и вечерний катер, когда город отражается в воде.</p>
+          </article>
+          <article class="scene-card road">
+            <div class="scene-kicker">Голландия</div>
+            <h3 class="scene-title">Тюльпановые поля и солёный ветер</h3>
+            <p class="scene-copy">Кёкенхоф ранним утром, Заансе-Сханс, сельдь в Волендаме и долгий вечер у Северного моря.</p>
+          </article>
+          <article class="scene-card warsaw">
+            <div class="scene-kicker">Варшава</div>
+            <h3 class="scene-title">Żurek в хлебе и праздничный финал</h3>
+            <p class="scene-copy">Старый город, Hala Koszyki, татар у стола в Stary Dom и тяжёлые кружки пива в U Szwejka.</p>
+          </article>
         </div>
       </div>
 
