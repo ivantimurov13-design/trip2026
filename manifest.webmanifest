@@ -1,12 +1,12 @@
 {
-  "name": "Европа 2026",
-  "short_name": "Европа '26",
-  "description": "Семейный путеводитель по поездке Европа 2026",
+  "name": "Европа лето 2026",
+  "short_name": "Европа лето",
+  "description": "Семейный путеводитель по летней поездке Европа 2026",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#FDFBF7",
-  "theme_color": "#B7791F",
+  "background_color": "#F6F8FB",
+  "theme_color": "#2F6FB0",
   "icons": [
     {
       "src": "./icon-192.png",

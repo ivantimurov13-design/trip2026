@@ -1,7 +1,9 @@
-const CACHE_NAME = 'trip2026-openai-v2';
+const CACHE_NAME = 'europe-summer-2026-v1';
 const CORE_ASSETS = [
   './',
   './index.html',
+  './data.js',
+  './config.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png'
