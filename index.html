@@ -573,7 +573,7 @@
       border-radius: 999px;
       position: relative;
       margin: 0 auto;
-      background: conic-gradient(#3b82f6 0 62.79%, #10b981 62.79% 78.68%, #f59e0b 78.68% 87.08%, #8b5cf6 87.08% 96.77%, #ef4444 96.77% 100%);
+      background: conic-gradient(#2f6fb0 0 16%, #10b981 16% 32%, #64748b 32% 48%, #8a6d3b 48% 64%, #ef4444 64% 80%, #f59e0b 80% 92%, #8b5cf6 92% 100%);
       box-shadow: inset 0 0 0 1px rgba(36, 48, 65, 0.05), var(--shadow);
     }
     .donut::after {
@@ -612,6 +612,18 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+    }
+    .budget-item-note {
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+    .budget-summary {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.6;
     }
     .dot {
       width: 12px;
@@ -1016,6 +1028,10 @@
         flex-direction: column;
         align-items: start;
       }
+      .budget-item-top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
   </style>
   <script src="./config.js"></script>
@@ -1028,7 +1044,7 @@
       <div class="tabs">
         <button class="tab-btn active" data-tab="main">Обзор</button>
         <button class="tab-btn" data-tab="plan">План</button>
-        <button class="tab-btn" data-tab="budget">Брони</button>
+        <button class="tab-btn" data-tab="budget">Бюджет</button>
         <button class="tab-btn" data-tab="tips">Советы</button>
         <button class="tab-btn" data-tab="ai">Консьерж ✨</button>
       </div>
@@ -1149,23 +1165,24 @@
       <div class="card pad-xl">
         <div class="section-header">
           <div>
-            <h2 class="section-title">Карта бронирований</h2>
-            <p class="section-note">Не смета, а приоритеты подготовки из финального файла: срочные слоты, трансферы, рестораны и документы.</p>
+            <h2 class="section-title">Бюджет и бронирования</h2>
+            <p class="section-note">Сводка по деньгам из consolidated-файла и будущие расходы на месте из подробного финального Markdown. Валюты показаны без конвертации.</p>
           </div>
         </div>
         <div class="budget-wrap">
           <div class="donut">
             <div class="donut-center">
               <div>
-                <div class="subtle">Итого</div>
+                <div class="subtle">Сводка</div>
                 <strong class="budget-center-value">перед поездкой</strong>
               </div>
             </div>
           </div>
           <div>
+            <p id="budget-summary" class="budget-summary"></p>
             <div id="budget-list" class="budget-list"></div>
             <div class="budget-total">
-              <span>Итого</span>
+              <span>Сводка</span>
               <span class="budget-total-value" style="color: var(--accent);">приоритеты</span>
             </div>
           </div>
@@ -1393,24 +1410,36 @@
     }
 
     function renderBudget() {
-      const total = appData.budget.reduce((sum, item) => sum + item.val, 0);
+      const weights = appData.budget.map((item) => item.weight || item.val || 1);
+      const total = weights.reduce((sum, val) => sum + val, 0);
+      const showPercent = appData.budgetShowPercent !== false;
+      const showBars = appData.budgetShowBars !== false;
       document.querySelectorAll('.budget-center-value').forEach((el) => {
         el.textContent = appData.budgetCenterLabel || 'перед поездкой';
       });
       document.querySelectorAll('.budget-total-value').forEach((el) => {
         el.textContent = appData.budgetTotalLabel || 'приоритеты';
       });
+      const summary = document.getElementById('budget-summary');
+      if (summary) {
+        summary.textContent = appData.budgetSummary || '';
+        summary.hidden = !appData.budgetSummary;
+      }
       const list = document.getElementById('budget-list');
-      list.innerHTML = appData.budget.map((item) => {
-        const pct = ((item.val / total) * 100).toFixed(1);
+      list.innerHTML = appData.budget.map((item, index) => {
+        const pct = ((weights[index] / total) * 100).toFixed(1);
         const amount = item.display || rub(item.val);
+        const meta = showPercent ? ` · <span class="subtle">${pct}%</span>` : '';
+        const note = item.note ? `<div class="budget-item-note">${escapeHtml(item.note)}</div>` : '';
+        const bar = showBars ? `<div class="bar"><span style="width:${pct}%; background:${item.color};"></span></div>` : '';
         return `
           <div class="budget-item">
             <div class="budget-item-top">
               <div><span class="dot" style="background:${item.color}"></span><strong>${escapeHtml(item.item)}</strong></div>
-              <div><strong>${escapeHtml(amount)}</strong> · <span class="subtle">${pct}%</span></div>
+              <div><strong>${escapeHtml(amount)}</strong>${meta}</div>
             </div>
-            <div class="bar"><span style="width:${pct}%; background:${item.color};"></span></div>
+            ${note}
+            ${bar}
           </div>
         `;
       }).join('');
@@ -1483,7 +1512,6 @@
     }
 
     function buildContext() {
-      const budgetTotal = appData.budget.reduce((sum, item) => sum + item.val, 0);
       return {
         tripName: 'Европа 2026',
         travelers: {
@@ -1515,7 +1543,7 @@
           }))
         })),
         budget: appData.budget,
-        budgetTotalRub: budgetTotal,
+        budgetSummary: appData.budgetSummary,
         bookingPriorities: appData.bookingPriorities,
         risks: appData.risks,
         tips: appData.tips

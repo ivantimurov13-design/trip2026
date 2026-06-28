@@ -242,14 +242,19 @@ window.EUROPE2026_DATA = {
       ]
     }
   ],
-  budgetCenterLabel: "перед поездкой",
-  budgetTotalLabel: "21 задача",
+  budgetCenterLabel: "5 валют",
+  budgetTotalLabel: "подтверждено + на месте",
+  budgetShowPercent: false,
+  budgetShowBars: false,
+  budgetSummary: "Подтверждённые суммы из travel_europe_2026_consolidated.md без конвертации: EUR 21 501.36, CHF 1 727.61, USD 2 225.50, TRY 70 413.96, RUB 156 352. Ниже отдельно добавлены будущие расходы на месте из подробного финального Markdown.",
   budget: [
-    { item: "Срочные слоты Рима и Венеции", val: 5, display: "5 броней", color: "#ef4444" },
-    { item: "Трансферы и сложные переезды", val: 4, display: "4 решения", color: "#f59e0b" },
-    { item: "Рестораны с обязательной бронью", val: 5, display: "5 столов", color: "#2f6fb0" },
-    { item: "Документы и авто-нюансы", val: 4, display: "4 проверки", color: "#10b981" },
-    { item: "Жаркие/закрытые замены", val: 3, display: "3 плана B", color: "#8b5cf6" }
+    { item: "EUR подтверждено", val: 21501.36, display: "21 501.36 EUR", note: "Отели, easyJet, поезд, Europcar и европейские брони из consolidated-файла.", color: "#2f6fb0" },
+    { item: "CHF подтверждено", val: 1727.61, display: "1 727.61 CHF", note: "Novotel Geneve Centre и Movenpick Basel; завтраки/ранний заезд отражены в бронированиях.", color: "#10b981" },
+    { item: "USD подтверждено", val: 2225.5, display: "2 225.50 USD", note: "Сумма из consolidated-файла, оставлена без конвертации в общий итог.", color: "#64748b" },
+    { item: "TRY подтверждено", val: 70413.96, display: "70 413.96 TRY", note: "Turkish Airlines Istanbul -> Lyon по consolidated-файлу.", color: "#8a6d3b" },
+    { item: "RUB подтверждено", val: 156352, display: "156 352 RUB", note: "Turkish Airlines Moscow -> Istanbul. Отдельно в письмах указан Europcar guaranteed price 118 287 RUB.", color: "#ef4444" },
+    { item: "Расходы на месте", val: 1270, display: "~€950–1 270 + CHF 120–153", note: "Лодки Анси, виньетка/парковки, VCE -> Езоло, Caribe Bay, ACTV, водное такси, гондола, Ватикан, Пантеон и FCO.", color: "#f59e0b" },
+    { item: "Рестораны", val: 80, display: "без точной суммы", note: "В подробном Markdown рестораны размечены как €, €€ и €€€, поэтому в числовой итог не включены.", color: "#8b5cf6" }
   ],
   bookingPriorities: [
     "Галерея Боргезе, Колизей Full Experience, Музеи Ватикана, Базилика Сан-Марко, Пантеон.",
@@ -281,6 +286,7 @@ window.EUROPE2026_DATA = {
     { cat: "Что бронировать", title: "Трансферы, которые реально спасают", sub: "VCE, Ferragosto, ISTPORT", text: "VCE → Езоло нужен минивэн с детскими креслами. Езоло → Венеция на Ferragosto лучше заранее решить как отдельную логистику. ISTPORT-шаттлы заказать оба раза.", footer: "Comfort buys time" },
     { cat: "Что бронировать", title: "Рестораны, где стол важен", sub: "Бушоны, фондю, Венеция", text: "Daniel et Denise / Café des Fédérations, Le Fréti, Edelweiss и Bistrot de Venise лучше бронировать заранее. Для шести человек спонтанность быстро превращается в лишнюю ходьбу.", footer: "Table for six: plan ahead" },
     { cat: "Что бронировать", title: "Авто и виньетки", sub: "Crit'Air, e-vignette, Europcar", text: "Подтвердить Crit'Air у Europcar в Лионе, купить/проверить швейцарскую e-vignette и заранее сдвинуть возврат авто в Базеле на 12:00–12:30.", footer: "The 06.08 gatekeeper" },
+    { cat: "Бюджет", title: "Две базы бюджета", sub: "consolidated + подробный финальный Markdown", text: "Consolidated-файл даёт подтверждённые суммы по валютам без конвертации. Подробный финальный Markdown добавляет расходы, которые ещё нужно оплатить на месте: лодки, виньетка, парковки, трансферы, аквапарк, ACTV, гондола, Ватикан, Пантеон и FCO.", footer: "Confirmed: EUR 21 501.36 / CHF 1 727.61 / USD 2 225.50 / TRY 70 413.96 / RUB 156 352" },
 
     { cat: "Что детям", title: "Анси и Езоло — лучшие детские дни", sub: "Вода, пляж, лодка", text: "Электролодка по Анси, пляж Doussard или Impérial, Jesolo с пологим входом и Caribe Bay для старших — это точки, где детям не надо терпеть взрослый маршрут.", footer: "Energy release matters" },
     { cat: "Что детям", title: "Коляска диктует маршрут", sub: "Лестницы, мостики, брусчатка", text: "Трабули, старый город Женевы, мостики Венеции, Форум и катакомбы требуют эрго-переноску. В этих местах коляска не помощник, а груз.", footer: "Carrier day: Venice and ancient Rome" },
