@@ -1,1087 +1,1117 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#2F6FB0" />
-  <link rel="icon" href="./icon-192.png" />
-  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f4ede1">
   <title>Европа лето 2026 | Интерактивный путеводитель</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f6f8fb;
-      --card: #ffffff;
-      --text: #243041;
-      --muted: #6b7788;
-      --line: #e7ebf0;
-      --accent: #2f6fb0;
-      --accent-soft: #e8f2fb;
-      --accent-2: #e9f5f2;
-      --danger: #b42318;
-      --shadow: 0 10px 30px rgba(36, 48, 65, 0.06);
-      --radius: 24px;
-      --radius-sm: 16px;
+      --paper: #f4ede1;
+      --paper-deep: #eadfce;
+      --surface: #fffdf9;
+      --surface-soft: #f8f1e7;
+      --ink: #2a2018;
+      --muted: #8c8071;
+      --line: #e7ddcc;
+      --accent: #c1572f;
+      --accent-soft: #f7e6dd;
+      --teal: #2f7d74;
+      --teal-soft: #e6f1ee;
+      --gold: #d99a3c;
+      --gold-soft: #f6edd6;
+      --lavender: #7a6f9c;
+      --shadow: 0 24px 60px rgba(60, 40, 20, 0.14);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --topbar: 72px;
+      color-scheme: light;
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      font-family: "Golos Text", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% -10%, rgba(193, 87, 47, 0.14), transparent 34%),
+        radial-gradient(circle at 92% 8%, rgba(47, 125, 116, 0.13), transparent 32%),
+        linear-gradient(180deg, #faf7f0 0%, var(--paper) 44%, #efe5d7 100%);
       -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
     }
 
-    .hidden { display: none !important; }
-    .container {
-      width: min(1040px, calc(100vw - 28px));
-      margin: 0 auto;
+    button, input, textarea {
+      font: inherit;
     }
 
-    .nav-wrap {
+    button {
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .serif {
+      font-family: "Spectral", Georgia, serif;
+    }
+
+    .mono {
+      font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    }
+
+    .topbar {
       position: sticky;
       top: 0;
       z-index: 50;
-      backdrop-filter: blur(12px);
-      background: rgba(255,255,255,0.88);
-      border-bottom: 1px solid rgba(231,235,240,0.85);
-    }
-    .nav {
+      height: var(--topbar);
       display: flex;
-      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(231, 221, 204, 0.9);
+      background: rgba(255, 253, 249, 0.84);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      width: min(1120px, calc(100% - 34px));
+      display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 68px;
-      padding: 0 6px;
+      gap: 20px;
     }
+
     .brand {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      white-space: nowrap;
-    }
-    .tabs {
       display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding-bottom: 4px;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 800;
     }
-    .tabs::-webkit-scrollbar { display: none; }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #fffdf9;
+      background: linear-gradient(145deg, var(--accent), var(--teal));
+      box-shadow: 0 12px 26px rgba(193, 87, 47, 0.24);
+    }
+
+    .desktop-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px;
+      border: 1px solid rgba(231, 221, 204, 0.82);
+      border-radius: 999px;
+      background: rgba(244, 237, 225, 0.62);
+    }
+
     .tab-btn {
       border: 0;
       background: transparent;
-      color: var(--muted);
-      padding: 22px 4px 18px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-weight: 700;
-      border-bottom: 3px solid transparent;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .tab-btn.active {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-
-    main { padding: 28px 0 56px; }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    .card.pad-xl { padding: 28px; }
-    .card.pad-lg { padding: 22px; }
-    .grid { display: grid; gap: 18px; }
-    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .hero-title {
-      margin: 0 0 10px;
-      font-size: clamp(32px, 4vw, 48px);
-      line-height: 1;
-      font-weight: 300;
-      letter-spacing: -0.04em;
-    }
-    .subtle { color: var(--muted); }
-    .stat {
-      background: #fafbfc;
-      border-radius: 18px;
-      padding: 14px 16px;
-      min-height: 84px;
-    }
-    .stat.highlight { background: var(--accent-soft); }
-    .stat-label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 11px;
-      color: #8a94a5;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-weight: 700;
-    }
-    .stat-value {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-    .section-title {
-      margin: 0;
-      font-size: clamp(24px, 3vw, 34px);
-      line-height: 1.08;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-    .section-note { margin: 6px 0 0; color: var(--muted); }
-
-    .overview-banner {
-      margin-top: 18px;
-      background: linear-gradient(135deg, #2f6fb0 0%, #138a8a 100%);
-      color: white;
-      padding: 22px;
-      border-radius: 28px;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      box-shadow: 0 16px 40px rgba(47, 111, 176, 0.22);
-    }
-    .overview-banner h3 { margin: 0 0 8px; font-size: 28px; }
-    .overview-banner p { margin: 0; color: rgba(255,255,255,0.92); max-width: 620px; }
-    .overview-banner .emoji {
-      position: absolute;
-      right: -10px;
-      bottom: -16px;
-      font-size: 84px;
-      opacity: 0.17;
-      pointer-events: none;
-    }
-
-    .pill-row {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: none;
-    }
-    .pill-row::-webkit-scrollbar { display: none; }
-    .pill {
-      border: 0;
       border-radius: 999px;
-      padding: 11px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      background: #eff2f6;
-      color: #475467;
-    }
-    .pill.active { background: var(--accent); color: white; }
-
-    .overview-cinema {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: 1.35fr 0.95fr;
-      gap: 18px;
-    }
-    .overview-feature {
-      position: relative;
-      min-height: 360px;
-      border-radius: 30px;
-      overflow: hidden;
-      padding: 30px;
-      color: white;
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.18) 0, transparent 28%),
-        linear-gradient(135deg, #1e293b 0%, #2f6fb0 42%, #138a8a 100%);
-      box-shadow: 0 24px 60px rgba(36, 48, 65, 0.16);
-    }
-    .overview-feature::before {
-      content: "";
-      position: absolute;
-      inset: auto -28px -34px auto;
-      width: 220px;
-      height: 220px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      filter: blur(2px);
-    }
-    .feature-kicker {
-      display: inline-flex;
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.16);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-    .feature-title {
-      margin: 16px 0 0;
-      max-width: 680px;
-      font-size: clamp(34px, 5vw, 54px);
-      line-height: 0.96;
-      letter-spacing: -0.05em;
-      font-weight: 800;
-    }
-    .feature-copy {
-      margin: 18px 0 0;
-      max-width: 640px;
-      color: rgba(255,255,255,0.92);
-      line-height: 1.75;
-      font-size: 16px;
-    }
-    .feature-taste-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .feature-taste {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.16);
-      font-size: 13px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.96);
-    }
-    .overview-side {
-      display: grid;
-      gap: 18px;
-    }
-    .overview-note,
-    .overview-pair {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      box-shadow: var(--shadow);
-    }
-    .overview-note {
-      padding: 22px;
-    }
-    .overview-note-kicker {
-      color: #8a94a5;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-weight: 800;
-      font-size: 11px;
-    }
-    .overview-note-title {
-      margin: 10px 0 0;
-      font-size: 28px;
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-      font-weight: 800;
-    }
-    .overview-note-copy {
-      margin: 12px 0 0;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-    .overview-pair {
-      display: grid;
-      gap: 1px;
-      background: var(--line);
-      padding: 1px;
-    }
-    .overview-pair-card {
-      padding: 20px 22px;
-      border-radius: 25px;
-      background: var(--card);
-    }
-    .overview-pair-card strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 24px;
-      letter-spacing: -0.03em;
-    }
-    .overview-pair-card p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .tip-card {
-      position: relative;
-      padding: 22px;
-      border-radius: 26px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-    .tip-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 4px;
-      background: linear-gradient(90deg, #2f6fb0 0%, #53b5a8 100%);
-    }
-    .tip-cat {
-      display: inline-block;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-    .tip-title {
-      margin: 0 0 10px;
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    .tip-sub {
-      margin: 0 0 10px;
-      color: #7c8798;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .tip-text { margin: 0; color: var(--muted); line-height: 1.75; }
-    .tip-footer {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px dashed #d8e1ea;
-      color: #5c6a7b;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .accordion-list { display: grid; gap: 14px; }
-    .accordion-item {
-      position: relative;
-      border-radius: 26px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: var(--card);
-      box-shadow: var(--shadow);
-    }
-    .accordion-item::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 5px;
-      background: linear-gradient(90deg, var(--city, var(--accent)), color-mix(in srgb, var(--city, var(--accent)) 35%, white));
-    }
-    .accordion-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 22px;
-      cursor: pointer;
-      background:
-        radial-gradient(circle at top right, color-mix(in srgb, var(--city, #d1953f) 12%, white) 0, transparent 32%),
-        linear-gradient(180deg, color-mix(in srgb, var(--city, #d1953f) 6%, white) 0%, rgba(255,255,255,0) 75%);
-    }
-    .accordion-head:hover { background: #fbfcfe; }
-    .accordion-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .accordion-stage {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 76px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: color-mix(in srgb, var(--city, #d1953f) 14%, white);
-      color: color-mix(in srgb, var(--city, #d1953f) 88%, #213042);
+      padding: 10px 13px;
       font-size: 12px;
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      color: #6f6558;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
     }
-    .accordion-dates {
-      display: inline-block;
-      font-size: 12px;
+
+    .tab-btn:hover {
+      color: var(--ink);
+      background: rgba(255, 253, 249, 0.74);
+    }
+
+    .tab-btn.active {
+      color: #fffdf9;
+      background: var(--accent);
+      box-shadow: 0 8px 18px rgba(193, 87, 47, 0.22);
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 34px));
+      margin: 26px auto 42px;
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .side-rail {
+      position: sticky;
+      top: calc(var(--topbar) + 24px);
+      display: grid;
+      gap: 16px;
+    }
+
+    .rail-card,
+    .panel {
+      border: 1px solid rgba(231, 221, 204, 0.96);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 253, 249, 0.78);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .rail-card {
+      padding: 20px;
+    }
+
+    .rail-hero {
+      min-height: 260px;
+      position: relative;
+      display: flex;
+      align-items: end;
+      padding: 20px;
+      color: #fffdf9;
+      background:
+        linear-gradient(180deg, rgba(42, 32, 24, 0.02), rgba(42, 32, 24, 0.76)),
+        radial-gradient(circle at 22% 20%, rgba(244, 237, 225, 0.38), transparent 28%),
+        linear-gradient(145deg, #caa06f 0%, #9a6b48 42%, #3f6f6a 100%);
+    }
+
+    .rail-hero h1 {
+      margin: 10px 0 0;
+      font-family: "Spectral", Georgia, serif;
+      font-size: clamp(32px, 4vw, 42px);
+      line-height: 1.02;
+      font-weight: 600;
+    }
+
+    .rail-hero .label,
+    .section-kicker,
+    .mini-label {
+      font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      color: var(--muted);
       font-weight: 800;
     }
-    .accordion-title {
+
+    .rail-hero .label {
+      color: rgba(255, 253, 249, 0.78);
+    }
+
+    .progress-line {
+      height: 8px;
+      border-radius: 999px;
+      background: var(--paper-deep);
+      overflow: hidden;
+      margin-top: 9px;
+    }
+
+    .progress-line span {
+      display: block;
+      height: 100%;
+      width: 22%;
+      background: linear-gradient(90deg, var(--accent), var(--teal));
+      border-radius: inherit;
+    }
+
+    .rail-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+    }
+
+    .rail-stat {
+      padding: 14px 12px;
+      border-radius: 15px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+
+    .rail-stat strong {
+      display: block;
+      margin-top: 6px;
+      font-family: "Spectral", Georgia, serif;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .app-panel {
+      min-height: calc(100vh - 128px);
+    }
+
+    .view {
+      display: none;
+      padding: 28px;
+    }
+
+    .view.active {
+      display: block;
+      animation: fadeIn 180ms ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .view-header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .view-title {
       margin: 0;
-      font-size: 24px;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
+      font-family: "Spectral", Georgia, serif;
+      font-size: clamp(32px, 4vw, 46px);
+      line-height: 1.04;
+      font-weight: 600;
     }
-    .accordion-blurb {
-      margin: 10px 0 0;
+
+    .view-note {
+      margin: 8px 0 0;
+      max-width: 760px;
       color: var(--muted);
-      line-height: 1.6;
-      max-width: 720px;
+      line-height: 1.55;
+      font-weight: 500;
     }
-    .accordion-chip-row,
-    .timeline-chip-row {
+
+    .pill-row {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 12px;
     }
-    .accordion-chip,
-    .timeline-chip {
+
+    .pill {
       display: inline-flex;
       align-items: center;
-      padding: 7px 10px;
+      gap: 7px;
+      padding: 7px 11px;
       border-radius: 999px;
-      background: #f3f6fa;
-      border: 1px solid #e2e8f0;
-      color: #526071;
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 249, 0.82);
+      color: #6b6051;
       font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-    }
-    .accordion-toggle {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      background: #f3f5f8;
-      display: grid;
-      place-items: center;
-      font-size: 30px;
-      color: #667085;
-      flex: 0 0 auto;
-      transition: transform .2s ease, background .2s ease;
-    }
-    .accordion-item.open .accordion-toggle {
-      transform: rotate(45deg);
-      background: #fff4db;
-      color: var(--accent);
-    }
-    .accordion-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height .35s ease, padding .35s ease;
-      background:
-        linear-gradient(180deg, color-mix(in srgb, var(--city, #d1953f) 4%, #fafbfc) 0%, #fafbfc 18%, #f7f9fc 100%);
-      border-top: 0 solid transparent;
-      padding: 0 22px;
-    }
-    .accordion-item.open .accordion-body {
-      max-height: 3600px;
-      padding: 6px 22px 22px;
-      border-top: 1px solid var(--line);
-    }
-    .city-editorial {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin: 8px 0 18px;
-    }
-    .city-editorial-card {
-      padding: 18px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.96);
-      border: 1px solid #e5ebf2;
-      box-shadow: 0 8px 22px rgba(36, 48, 65, 0.05);
-    }
-    .city-editorial-card span {
-      display: inline-block;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
       font-weight: 800;
-      color: #8a94a5;
-      margin-bottom: 10px;
     }
-    .city-editorial-card p {
-      margin: 0;
-      color: #586677;
-      line-height: 1.7;
+
+    .warning {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: #f7eccf;
+      border: 1px solid #e3c97e;
+      color: #7d5a10;
     }
-    .timeline { display: grid; gap: 18px; }
-    .timeline-item {
+
+    .warning strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 14px;
+    }
+
+    .warning span:last-child {
+      color: #8a6f2e;
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .today-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .feature-card {
       position: relative;
-      padding: 4px 0 0 22px;
-      border-left: 2px solid #d7deea;
-      transition: transform .18s ease;
+      min-height: 220px;
+      border-radius: 26px;
+      overflow: hidden;
+      color: #fffdf9;
+      background:
+        linear-gradient(180deg, rgba(10, 16, 20, 0.04), rgba(10, 16, 20, 0.72)),
+        radial-gradient(circle at 24% 18%, rgba(255, 253, 249, 0.26), transparent 30%),
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 11px, transparent 11px 22px),
+        linear-gradient(150deg, #3f6f8a, #22454f 58%, #7a4a2e);
+      box-shadow: inset 0 0 0 1px rgba(255, 253, 249, 0.18);
     }
-    .timeline-item:hover {
-      transform: translateX(2px);
+
+    .feature-card-content {
+      position: absolute;
+      inset: auto 20px 18px;
     }
-    .timeline-item::before {
+
+    .feature-card h3 {
+      margin: 5px 0 0;
+      font-family: "Spectral", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.02;
+      font-weight: 600;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 66px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .timeline-time {
+      padding-top: 2px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .timeline-row.is-risk .timeline-time { color: var(--accent); }
+
+    .timeline-body {
+      position: relative;
+      padding: 0 0 20px 18px;
+      border-left: 2px solid var(--line);
+    }
+
+    .timeline-row:last-child .timeline-body {
+      border-left-color: transparent;
+    }
+
+    .timeline-body::before {
       content: "";
       position: absolute;
-      left: -7px;
-      top: 2px;
-      width: 12px;
-      height: 12px;
+      left: -6px;
+      top: 5px;
+      width: 10px;
+      height: 10px;
       border-radius: 999px;
-      background: currentColor;
-      box-shadow: 0 0 0 5px rgba(255,255,255,0.9);
+      background: var(--teal);
+      box-shadow: 0 0 0 4px var(--surface);
     }
-    .timeline-card {
-      background: rgba(255,255,255,0.92);
-      border: 1px solid #e6ecf3;
-      border-radius: 22px;
-      padding: 16px 18px 16px;
-      box-shadow: 0 8px 24px rgba(36, 48, 65, 0.05);
+
+    .timeline-row.is-risk .timeline-body::before {
+      background: var(--accent);
     }
-    .timeline-chip-row {
-      margin: 0 0 10px;
-    }
-    .timeline-time {
+
+    .timeline-body strong {
       display: block;
-      font-size: 12px;
-      color: #8a94a5;
-      font-weight: 800;
-      margin-bottom: 2px;
+      font-size: 15px;
+      line-height: 1.3;
     }
-    .timeline-title {
+
+    .timeline-body p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .quick-grid,
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .quick-card,
+    .soft-card,
+    .tip-card,
+    .route-card,
+    .flight-card,
+    .budget-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 253, 249, 0.88);
+    }
+
+    .quick-card {
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .quick-card .icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .quick-card strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+    }
+
+    .soft-card {
+      padding: 16px;
+    }
+
+    .soft-card h3,
+    .tip-card h3,
+    .route-card h3,
+    .budget-card h3 {
       margin: 0;
       font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+      line-height: 1.25;
     }
-    .timeline-desc {
+
+    .soft-card p,
+    .tip-card p,
+    .route-card p,
+    .budget-card p {
       margin: 8px 0 0;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.55;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .route-list {
+      display: grid;
+      gap: 0;
+      margin-top: 16px;
+    }
+
+    .route-stop {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) auto;
+      gap: 13px;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid #ece2d2;
+    }
+
+    .route-stop:last-child { border-bottom: 0; }
+
+    .route-stop.active {
+      margin: 0 -8px;
+      padding-left: 8px;
+      padding-right: 8px;
+      border-radius: 12px;
+      background: #f0e2cf;
+      border-bottom-color: transparent;
+    }
+
+    .route-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      justify-self: center;
+    }
+
+    .route-stop strong {
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .route-stop time {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .flight-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .flight-card {
+      padding: 15px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    .flight-card .code {
+      font-family: "Spectral", Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .flight-card .city {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .flight-arrow {
+      display: grid;
+      gap: 4px;
+      place-items: center;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .plan-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .city-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 253, 249, 0.9);
+      overflow: hidden;
+    }
+
+    .city-button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      text-align: left;
+    }
+
+    .stage-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 10px;
+    }
+
+    .stage-chip {
+      display: inline-flex;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #f0e2cf;
+      color: #7a4a2e;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .city-card h3 {
+      margin: 0;
+      font-family: "Spectral", Georgia, serif;
+      font-size: 28px;
+      line-height: 1.08;
+      font-weight: 600;
+    }
+
+    .city-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .city-open {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: var(--teal);
+      background: var(--teal-soft);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .city-detail {
+      display: none;
+      padding: 0 18px 18px;
+    }
+
+    .city-card.open .city-detail { display: block; }
+
+    .city-card.open .city-open { transform: rotate(45deg); }
+
+    .editorial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 4px 0 14px;
+    }
+
+    .event-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .event-card {
+      padding: 13px 14px;
+      border-radius: 15px;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+    }
+
+    .event-card time {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .event-card strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .event-card p {
+      margin: 5px 0 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .map-card {
+      position: relative;
+      min-height: 420px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1px solid #d9cdb6;
+      background:
+        radial-gradient(circle at 30% 25%, #dfe7d0, transparent 45%),
+        radial-gradient(circle at 75% 70%, #cfe0dd, transparent 50%),
+        linear-gradient(160deg, #eef0e2, #e3e6d4);
+    }
+
+    .map-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(#00000008 1px, transparent 1px),
+        linear-gradient(90deg, #00000008 1px, transparent 1px);
+      background-size: 34px 34px;
+    }
+
+    .map-line {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .map-pin {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border: 2px solid #fffdf9;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: #fffdf9;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 2px 8px rgba(42, 32, 24, 0.28);
+      transform: translate(-50%, -50%);
+    }
+
+    .map-pin.active {
+      box-shadow: 0 0 0 5px rgba(15, 118, 110, 0.2), 0 2px 8px rgba(42, 32, 24, 0.32);
+    }
+
+    .map-legend {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
     }
 
     .budget-wrap {
       display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 26px;
-      align-items: center;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
     }
-    .donut {
-      width: min(320px, 100%);
-      aspect-ratio: 1;
-      border-radius: 999px;
+
+    .budget-donut {
       position: relative;
+      width: min(270px, 100%);
+      aspect-ratio: 1;
       margin: 0 auto;
-      background: conic-gradient(#2f6fb0 0 69.77%, #f59e0b 69.77% 93.69%, #10b981 93.69% 98.47%, #8b5cf6 98.47% 100%);
-      box-shadow: inset 0 0 0 1px rgba(36, 48, 65, 0.05), var(--shadow);
+      border-radius: 999px;
+      background: conic-gradient(var(--accent) 0 69.8%, var(--gold) 69.8% 93.7%, var(--teal) 93.7% 98.5%, var(--lavender) 98.5% 100%);
+      box-shadow: 0 18px 48px rgba(60, 40, 20, 0.14);
     }
-    .donut::after {
+
+    .budget-donut::after {
       content: "";
       position: absolute;
-      inset: 22%;
+      inset: 32px;
       border-radius: inherit;
-      background: var(--card);
-      box-shadow: inset 0 0 0 1px var(--line);
-    }
-    .donut-center {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      z-index: 1;
-      text-align: center;
-      padding: 28%;
-    }
-    .donut-center strong {
-      display: block;
-      font-size: 34px;
-      letter-spacing: -0.03em;
-    }
-    .budget-list { display: grid; gap: 14px; }
-    .budget-item {
-      display: grid;
-      gap: 10px;
-      padding: 16px;
-      border-radius: 18px;
-      background: #fafbfc;
+      background: var(--paper);
       border: 1px solid var(--line);
     }
-    .budget-item-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .budget-amounts {
+
+    .budget-center {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
       display: grid;
-      gap: 4px;
-      justify-items: end;
-      text-align: right;
-      max-width: 56%;
+      place-items: center;
+      text-align: center;
+      padding: 34%;
     }
-    .budget-rub {
-      color: var(--accent);
-      font-size: 14px;
-      font-weight: 900;
-    }
-    .budget-item-note {
-      color: var(--muted);
-      font-weight: 650;
-      line-height: 1.5;
-      font-size: 13px;
-    }
-    .budget-summary {
-      margin: 0 0 16px;
-      color: var(--muted);
+
+    .budget-center strong {
+      display: block;
+      margin-top: 4px;
+      font-family: "Spectral", Georgia, serif;
+      font-size: 28px;
+      line-height: 1.02;
       font-weight: 700;
-      line-height: 1.6;
     }
-    .budget-rates {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 0 0 16px;
-    }
-    .budget-rate-chip {
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #285e9b;
-      border: 1px solid #dbeafe;
-      font-size: 12px;
-      font-weight: 850;
-    }
-    .budget-lines {
+
+    .budget-mini-stats {
       display: grid;
-      gap: 8px;
-      padding-top: 4px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
     }
-    .budget-line {
+
+    .budget-list {
+      display: grid;
+      gap: 13px;
+    }
+
+    .budget-card {
+      padding: 15px;
+    }
+
+    .budget-top {
       display: flex;
+      align-items: baseline;
       justify-content: space-between;
       gap: 14px;
-      padding: 8px 0 0;
-      border-top: 1px solid #edf1f6;
-      color: #4f5f72;
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.35;
     }
-    .budget-line strong {
-      color: #1f2937;
-      white-space: nowrap;
-    }
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
+
+    .budget-dot {
       display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
       margin-right: 8px;
       vertical-align: middle;
     }
+
+    .budget-amount {
+      text-align: right;
+      font-weight: 800;
+    }
+
+    .budget-amount span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
     .bar {
-      width: 100%;
-      height: 10px;
+      height: 8px;
+      margin-top: 10px;
       border-radius: 999px;
-      background: #eef2f6;
+      background: var(--paper-deep);
       overflow: hidden;
     }
-    .bar > span {
+
+    .bar span {
       display: block;
       height: 100%;
       border-radius: inherit;
     }
-    .budget-total {
-      margin-top: 18px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
 
-    .warning {
-      background: #fff8e8;
-      border: 1px solid #f3d8a6;
-      color: #7a5617;
-      padding: 14px 16px;
-      border-radius: 18px;
-      margin-bottom: 16px;
-      line-height: 1.55;
-    }
-    .warning code {
-      background: rgba(255,255,255,0.65);
-      padding: 2px 6px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-
-    .chat-shell {
-      min-height: 600px;
-      display: flex;
-      flex-direction: column;
-    }
-    .chat-history {
-      flex: 1 1 auto;
-      min-height: 260px;
-      max-height: 60vh;
-      overflow: auto;
+    .budget-lines {
       display: grid;
-      gap: 14px;
-      padding-right: 2px;
-      margin-bottom: 18px;
-    }
-    .message {
-      padding: 16px 18px;
-      border-radius: 20px;
-      line-height: 1.65;
-      white-space: normal;
-      overflow-wrap: anywhere;
-      border: 1px solid var(--line);
-    }
-    .message.user {
-      margin-left: 40px;
-      background: #f4f6f8;
-      color: var(--text);
-    }
-    .message.bot {
-      margin-right: 40px;
-      background: #fff8e8;
-      border-color: #f0ddb8;
-    }
-    .message strong { font-weight: 800; }
-    .message.loading::after {
-      content: "";
-      display: inline-block;
-      width: 1.2em;
-      text-align: left;
-      animation: dots 1.3s infinite steps(4);
-      overflow: hidden;
-      vertical-align: bottom;
-    }
-    @keyframes dots {
-      0% { content: ""; }
-      25% { content: "."; }
-      50% { content: ".."; }
-      75% { content: "..."; }
-      100% { content: ""; }
+      gap: 7px;
+      margin-top: 12px;
     }
 
-    .quick-grid {
+    .budget-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 7px;
+      border-top: 1px solid #ece2d2;
+      color: #655b50;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .budget-line strong {
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .filter-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 18px;
     }
-    .quick-btn {
-      border: 0;
-      background: #eff2f6;
-      color: #4d5a6c;
-      border-radius: 999px;
-      padding: 9px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .quick-btn:disabled { cursor: not-allowed; opacity: .55; }
 
-    .chat-input-wrap {
-      display: flex;
+    .filter-btn {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255, 253, 249, 0.72);
+      color: #6f6558;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .filter-btn.active {
+      color: #fffdf9;
+      background: var(--teal);
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .tip-card {
+      padding: 18px;
+      border-top: 4px solid var(--teal);
+    }
+
+    .tip-card footer {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #ece2d2;
+      color: #6d6254;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .chat-card {
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .chat-history {
+      min-height: 330px;
+      max-height: 440px;
+      overflow: auto;
+      padding: 18px;
+      display: grid;
+      align-content: start;
       gap: 12px;
-      align-items: center;
-      margin-top: auto;
+      background: #fff7e9;
     }
+
+    .message {
+      width: fit-content;
+      max-width: 82%;
+      padding: 12px 14px;
+      border-radius: 18px;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .message.bot {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: #5a4e40;
+    }
+
+    .message.user {
+      justify-self: end;
+      color: #fffdf9;
+      background: var(--teal);
+    }
+
+    .chat-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+
     .chat-input {
-      width: 100%;
-      border: 1px solid #d9e1ea;
-      background: #fafbfc;
-      border-radius: 20px;
-      padding: 15px 18px;
-      font-size: 16px;
+      min-height: 48px;
+      max-height: 120px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px 14px;
+      color: var(--ink);
+      background: #fffdf9;
       outline: none;
-      transition: border-color .15s ease, box-shadow .15s ease;
     }
-    .chat-input:focus {
-      border-color: #e2b561;
-      box-shadow: 0 0 0 4px rgba(183,121,31,0.14);
-    }
+
     .send-btn {
       border: 0;
+      border-radius: 16px;
+      padding: 0 18px;
+      color: #fffdf9;
       background: var(--accent);
-      color: white;
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      cursor: pointer;
-      font-size: 21px;
-      flex: 0 0 auto;
-      box-shadow: 0 12px 24px rgba(47,111,176,0.24);
-    }
-    .send-btn:disabled, .chat-input:disabled { opacity: .55; cursor: not-allowed; }
-
-    .footer {
-      margin-top: 34px;
-      text-align: center;
-      color: #8a94a5;
-      font-size: 13px;
-      line-height: 1.6;
-      padding: 0 12px;
+      font-weight: 900;
     }
 
-    .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .scene-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-    .scene-card {
-      position: relative;
-      min-height: 180px;
-      border-radius: 24px;
-      overflow: hidden;
-      padding: 18px;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: end;
-      box-shadow: var(--shadow);
-    }
-    .scene-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(12, 18, 28, 0.04) 0%, rgba(12, 18, 28, 0.7) 100%);
-    }
-    .scene-card > * {
-      position: relative;
-      z-index: 1;
-    }
-    .scene-kicker {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-weight: 800;
-      opacity: 0.9;
-      margin-bottom: 10px;
-    }
-    .scene-title {
-      margin: 0;
-      font-size: 24px;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      font-weight: 800;
-    }
-    .scene-copy {
-      margin: 10px 0 0;
-      line-height: 1.55;
-      color: rgba(255,255,255,0.9);
-    }
-    .scene-card.paris {
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.22) 0, transparent 30%),
-        linear-gradient(135deg, #315f9f 0%, #138a8a 48%, #b9892b 100%);
-    }
-    .scene-card.amsterdam {
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,0.18) 0, transparent 28%),
-        linear-gradient(135deg, #0f766e 0%, #2f6fb0 46%, #c0492f 100%);
-    }
-    .scene-card.road {
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.18) 0, transparent 28%),
-        linear-gradient(135deg, #166534 0%, #138a8a 40%, #0ea5e9 100%);
-    }
-    .scene-card.warsaw {
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,0.2) 0, transparent 30%),
-        linear-gradient(135deg, #c0492f 0%, #8a6d3b 50%, #1d4ed8 100%);
+    .send-btn:disabled,
+    .chat-input:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
 
-    .flight-list {
-      display: grid;
-      gap: 16px;
-      margin-top: 18px;
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 80;
+      display: none;
+      width: min(430px, calc(100% - 22px));
+      transform: translateX(-50%);
+      border: 1px solid rgba(231, 221, 204, 0.96);
+      border-radius: 26px;
+      background: rgba(255, 253, 249, 0.92);
+      box-shadow: 0 16px 40px rgba(60, 40, 20, 0.16);
+      backdrop-filter: blur(18px);
+      padding: 8px;
+      gap: 4px;
+      overflow-x: auto;
     }
-    .flight-card {
-      position: relative;
-      overflow: hidden;
-      padding: 22px;
-      border-radius: 24px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-    }
-    .flight-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 4px;
-      background: #d6eadb;
-    }
-    .flight-top {
-      display: flex;
-      align-items: start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-    .flight-pnr {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 0;
-    }
-    .flight-pnr code {
-      font-size: 22px;
-      letter-spacing: 0.06em;
-      color: var(--text);
+
+    .bottom-tab {
+      min-width: 66px;
+      border: 0;
+      border-radius: 20px;
       background: transparent;
-      padding: 0;
-    }
-    .flight-passengers {
-      margin-top: 8px;
-      color: var(--muted);
-    }
-    .flight-badge {
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: #edf8ee;
-      color: #16703e;
-      font-size: 14px;
+      padding: 8px 8px 7px;
+      color: #a89c8a;
+      font-size: 10px;
       font-weight: 800;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .flight-badge::before {
-      content: "✓";
-      font-size: 16px;
-      line-height: 1;
-    }
-    .flight-route {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      gap: 18px;
-      align-items: center;
-      padding-top: 18px;
-      border-top: 1px dashed #dbe3ec;
-    }
-    .flight-leg:last-child {
-      text-align: right;
-    }
-    .flight-date,
-    .flight-terminal,
-    .flight-city {
-      color: var(--muted);
-    }
-    .flight-date {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .flight-code {
-      margin: 10px 0 0;
-      font-size: 44px;
-      line-height: 0.95;
-      font-weight: 900;
-      letter-spacing: -0.05em;
-    }
-    .flight-city {
-      margin-top: 8px;
-      font-size: 15px;
-    }
-    .flight-time {
-      margin-top: 12px;
-      font-size: 34px;
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-    .flight-mid {
-      min-width: 140px;
       text-align: center;
-      color: #8a94a5;
-      font-weight: 800;
-    }
-    .flight-mid-line {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .flight-mid-line::before,
-    .flight-mid-line::after {
-      content: "";
-      width: 34px;
-      height: 2px;
-      border-radius: 999px;
-      background: #dde5ef;
-    }
-    .flight-mid-line span {
-      font-size: 28px;
-      color: #d1d9e5;
-      line-height: 1;
-    }
-    .flight-meta {
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .flight-chip {
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: #fafbfc;
-      border: 1px solid var(--line);
-      font-size: 13px;
-      color: #506072;
-      font-weight: 700;
     }
 
-    @media (max-width: 900px) {
-      .grid-4, .grid-3, .grid-2, .scene-grid, .overview-cinema, .city-editorial { grid-template-columns: 1fr; }
-      .budget-wrap { grid-template-columns: 1fr; }
-      .message.user { margin-left: 14px; }
-      .message.bot { margin-right: 14px; }
-      .nav { flex-direction: column; align-items: stretch; padding: 10px 0 0; }
-      .tabs { padding-left: 2px; }
-      .brand { padding: 0 6px; }
-      .flight-route { grid-template-columns: 1fr; }
-      .flight-leg:last-child { text-align: left; }
-      .flight-mid {
-        min-width: 0;
+    .bottom-tab span {
+      display: block;
+      font-size: 18px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .bottom-tab.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .app-footer {
+      width: min(1120px, calc(100% - 34px));
+      margin: 0 auto 34px;
+      color: #9a8d7a;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.7;
+      font-weight: 600;
+    }
+
+    @media (max-width: 980px) {
+      :root { --topbar: 64px; }
+      body {
+        padding-bottom: 92px;
+      }
+      .desktop-tabs {
+        display: none;
+      }
+      .topbar-inner {
+        width: min(430px, calc(100% - 28px));
+      }
+      .brand {
+        font-size: 20px;
+      }
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+        border-radius: 11px;
+      }
+      .page {
+        width: min(430px, 100%);
+        margin: 14px auto 20px;
+        grid-template-columns: 1fr;
+      }
+      .side-rail {
+        display: none;
+      }
+      .panel {
+        border-radius: 32px;
+        box-shadow: 0 20px 52px rgba(60, 40, 20, 0.14);
+      }
+      .view {
+        padding: 20px 18px 26px;
+      }
+      .view-header {
+        display: block;
+        margin-bottom: 18px;
+      }
+      .view-title {
+        font-size: 30px;
+      }
+      .today-grid,
+      .budget-wrap,
+      .tips-grid,
+      .editorial-grid {
+        grid-template-columns: 1fr;
+      }
+      .feature-card {
+        min-height: 178px;
+      }
+      .feature-card h3 {
+        font-size: 26px;
+      }
+      .quick-grid,
+      .stat-grid,
+      .rail-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .flight-card {
+        grid-template-columns: 1fr;
         text-align: left;
       }
-      .flight-mid-line {
-        justify-content: flex-start;
+      .flight-arrow {
+        justify-items: start;
       }
-      .flight-top {
-        flex-direction: column;
-        align-items: start;
+      .map-card {
+        min-height: 330px;
       }
-      .budget-item-top {
+      .budget-donut {
+        width: 208px;
+      }
+      .budget-donut::after {
+        inset: 26px;
+      }
+      .budget-top {
         align-items: flex-start;
         flex-direction: column;
       }
-      .budget-amounts {
-        justify-items: start;
-        max-width: none;
+      .budget-amount {
         text-align: left;
       }
       .budget-line {
@@ -1089,636 +1119,581 @@
         flex-direction: column;
         gap: 3px;
       }
+      .chat-form {
+        grid-template-columns: 1fr;
+      }
+      .bottom-nav {
+        display: flex;
+      }
+      .app-footer {
+        width: min(430px, calc(100% - 28px));
+      }
+    }
+
+    @media (max-width: 420px) {
+      .topbar-inner {
+        width: calc(100% - 24px);
+      }
+      .page {
+        width: 100%;
+        padding: 0 10px;
+      }
+      .panel {
+        border-radius: 28px;
+      }
+      .view {
+        padding: 18px 14px 24px;
+      }
+      .timeline-row {
+        grid-template-columns: 58px minmax(0, 1fr);
+        gap: 10px;
+      }
+      .quick-grid {
+        gap: 8px;
+      }
+      .quick-card {
+        padding: 12px 6px;
+      }
     }
   </style>
   <script src="./config.js"></script>
-  <script src="./data.js?v=confirmed-budget-20260629"></script>
+  <script src="./data.js?v=warm-redesign-20260629"></script>
 </head>
 <body>
-  <div class="nav-wrap">
-    <div class="container nav">
-      <div class="brand">Европа ’26</div>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="main">Обзор</button>
-        <button class="tab-btn" data-tab="plan">План</button>
-        <button class="tab-btn" data-tab="budget">Бюджет</button>
-        <button class="tab-btn" data-tab="tips">Советы</button>
-        <button class="tab-btn" data-tab="ai">Консьерж ✨</button>
-      </div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">✦</span>Европа ’26</div>
+      <nav class="desktop-tabs" id="desktop-tabs" aria-label="Разделы"></nav>
     </div>
-  </div>
+  </header>
 
-  <main class="container">
-    <section id="section-main" class="tab-section">
-      <div class="card pad-xl">
-        <h1 class="hero-title">Лето между Альпами, Адриатикой и Римом</h1>
-        <p class="subtle">27-дневный семейный маршрут для 6 человек: технический Стамбул, Лион и Анси, швейцарская дуга через Женеву и Базель, 9 ночей моря в Лидо-ди-Езоло, затем Венеция и Рим. Всё собрано из финальных файлов «Европа» с акцентом на детей, коляску, жару и один большой блок в день.</p>
-        <div class="grid grid-4" style="margin-top: 22px;">
-          <div class="stat">
-            <span class="stat-label">Старт</span>
-            <span class="stat-value">27 июля</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Финиш</span>
-            <span class="stat-value">22 августа</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Маршрут</span>
-            <span class="stat-value">4 страны + IST</span>
-          </div>
-          <div class="stat highlight">
-            <span class="stat-label">Темп</span>
-            <span class="stat-value" style="color: var(--accent);">1 big thing</span>
-          </div>
+  <div class="page">
+    <aside class="side-rail" aria-label="Маршрут">
+      <section class="rail-card rail-hero">
+        <div>
+          <div class="label">27 июля - 22 августа · 6 человек</div>
+          <h1>Лето между Альпами, Адриатикой и Римом</h1>
         </div>
-        <div style="margin-top: 18px; padding: 16px 18px; border-radius: 20px; background: #faf6ee; border: 1px solid #f1dfb8;">
-          <div class="stat-label" style="margin-bottom: 8px; color: #1f5e9a;">Философия маршрута</div>
-          <div style="font-weight: 700; line-height: 1.65;">Утро — главный акцент, 13:00–16:30 — сиеста и прохлада, вечер — мягкая прогулка или понятный ужин. Машина работает только там, где даёт свободу: озёра, Берн и красивые перегоны.</div>
-        </div>
-        <div class="scene-grid">
-          <article class="scene-card paris">
-            <div class="scene-kicker">Лион и Анси</div>
-            <h3 class="scene-title">Трабули, Фурвьер и прозрачное озеро</h3>
-            <p class="scene-copy">Старый Лион, фуникулёр вместо подъёма, бушон вечером и Анси с электролодкой, каналами и пляжем для малыша.</p>
-          </article>
-          <article class="scene-card amsterdam">
-            <div class="scene-kicker">Швейцария</div>
-            <h3 class="scene-title">Салев, жёлтые катера и медведи Берна</h3>
-            <p class="scene-copy">Женева без музейного понедельника, Bains des Pâquis, Каруж и перегон в Базель через медвежий парк.</p>
-          </article>
-          <article class="scene-card road">
-            <div class="scene-kicker">Адриатика</div>
-            <h3 class="scene-title">Девять ночей моря и вечерняя Via Bafile</h3>
-            <p class="scene-copy">Пляж утром, сиеста в жару, Caribe Bay для старших, Бурано как цветной выезд и полупансион без лишней логистики.</p>
-          </article>
-          <article class="scene-card warsaw">
-            <div class="scene-kicker">Венеция и Рим</div>
-            <h3 class="scene-title">Сан-Марко рано, Колизей утром, Боргезе вечером</h3>
-            <p class="scene-copy">Ferragosto с запасом, мостики с переноской, чикетти, затем Рим в режиме ранних стартов и прохладных пауз.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="overview-cinema">
-        <article class="overview-feature">
-          <span class="feature-kicker">Summer Route Narrative</span>
-          <h2 class="feature-title">Из лионского бушона к озеру Анси, потом к Адриатике, Венеции и римским утрам без перегрева.</h2>
-          <p class="feature-copy">У маршрута три дыхания: сначала города и Альпы с машиной, затем море как большая пауза, затем плотные итальянские города. Важная логика не в количестве точек, а в том, чтобы каждый день имел один сильный центр и достаточно воздуха для детей.</p>
-          <div class="feature-taste-row">
-            <span class="feature-taste">27 Jul – 06 Aug · города и Альпы</span>
-            <span class="feature-taste">06–15 Aug · море и пауза</span>
-            <span class="feature-taste">15–21 Aug · Венеция и Рим</span>
-          </div>
-        </article>
-        <div class="overview-side">
-          <article class="overview-note">
-            <div class="overview-note-kicker">Where The Story Starts</div>
-            <h3 class="overview-note-title">Carlton Lyon и прямой вход в Presqu'île</h3>
-            <p class="overview-note-copy">После технического Стамбула маршрут раскрывается в Лионе: Place des Jacobins, набережная Соны, трабули и Фурвьер. Это короткий, красивый разгон перед альпийской частью.</p>
-          </article>
-          <div class="overview-pair">
-            <article class="overview-pair-card">
-              <span class="overview-note-kicker">The Car Window</span>
-              <strong>Dacia Jogger 7 мест</strong>
-              <p>Машина нужна не для гонки, а для Анси, Салева, Берна и спокойного контроля темпа до Базеля. После этого маршрут честно переходит в трансферы и поезда.</p>
-            </article>
-            <article class="overview-pair-card">
-              <span class="overview-note-kicker">The Family Rhythm</span>
-              <strong>One Big Thing A Day</strong>
-              <p>Фурвьер, озеро Анси, Салев, Венеция, Колизей и Ватикан занимают утро. После них не нужен подвиг, нужен душ, тень, вода и мягкий вечер.</p>
-            </article>
-          </div>
-        </div>
-      </div>
-
-      <section style="margin-top: 18px;">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Перелёты</h2>
-            <p class="section-note">Авиакаркас всей поездки: где нужен спокойный транзит, где важен мягкий переезд, а где стоит лишний раз проверить посадочные и терминалы.</p>
-          </div>
-        </div>
-        <div id="flight-list" class="flight-list"></div>
       </section>
 
-      <div class="overview-banner" id="open-ai-banner">
-        <h3>Голодны до впечатлений? ✨</h3>
-        <p>ИИ-консьерж подскажет, как разложить Анси без перегруза, где бронировать фондю, как пережить Ferragosto и чем заменить жаркий блок в Риме.</p>
-        <div class="emoji">🍽️</div>
-      </div>
-    </section>
-
-    <section id="section-plan" class="tab-section hidden">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Детальный тайминг</h2>
-          <p class="section-note">Нажмите на этап, чтобы открыть не просто тайминг, а маленький маршрутный рассказ: где будет вкусно, красиво и по-настоящему приятно всей семье.</p>
+      <section class="rail-card">
+        <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;">
+          <strong>До старта</strong>
+          <span class="mono" id="rail-countdown">июль</span>
         </div>
-      </div>
-      <div id="plan-container" class="accordion-list"></div>
-    </section>
+        <div class="progress-line"><span></span></div>
+      </section>
 
-    <section id="section-budget" class="tab-section hidden">
-      <div class="card pad-xl">
-        <div class="section-header">
+      <section class="rail-card">
+        <div class="rail-stats">
+          <div class="rail-stat"><span class="mini-label">Старт</span><strong>27.07</strong></div>
+          <div class="rail-stat"><span class="mini-label">Финиш</span><strong>22.08</strong></div>
+          <div class="rail-stat"><span class="mini-label">Стран</span><strong>4 + IST</strong></div>
+        </div>
+      </section>
+
+      <section class="rail-card">
+        <div class="section-kicker">Маршрут</div>
+        <div class="route-list" id="rail-route"></div>
+      </section>
+    </aside>
+
+    <main class="panel app-panel">
+      <section class="view active" id="view-today" data-view="today">
+        <div class="view-header">
           <div>
-            <h2 class="section-title">Бюджет и бронирования</h2>
-            <p class="section-note">Только подтверждённые траты из consolidated-файла: отели, перелёты, авто и поезд. Внизу — примерный итог в рублях по расчётному курсу с буфером.</p>
+            <h2 class="view-title" id="today-title">Сегодня</h2>
+            <p class="view-note" id="today-subtitle"></p>
+          </div>
+          <div class="pill-row" id="today-weather"></div>
+        </div>
+
+        <div class="today-grid">
+          <div>
+            <div class="warning" id="today-warning"></div>
+            <div class="section-kicker" style="margin:22px 0 10px;">Главное сегодня</div>
+            <article class="feature-card">
+              <div class="feature-card-content">
+                <div class="mini-label" style="color:rgba(255,253,249,.76);">Перелёт + трансфер к морю</div>
+                <h3>BSL → VCE → Езоло</h3>
+                <div class="pill-row" style="margin-top:12px;">
+                  <span class="pill" style="background:rgba(255,253,249,.18);border-color:rgba(255,253,249,.28);color:#fffdf9;">easyJet 15:25</span>
+                  <span class="pill" style="background:rgba(255,253,249,.18);border-color:rgba(255,253,249,.28);color:#fffdf9;">PNR KCSCQQ9</span>
+                </div>
+              </div>
+            </article>
+
+            <div class="section-kicker" style="margin:24px 0 12px;">План дня</div>
+            <div class="timeline" id="today-timeline"></div>
+          </div>
+
+          <div>
+            <div class="quick-grid">
+              <div class="quick-card"><div class="icon">🎫</div><strong>Документы</strong></div>
+              <div class="quick-card"><div class="icon">📍</div><strong>Адреса</strong></div>
+              <div class="quick-card"><div class="icon">✅</div><strong>Брони</strong></div>
+            </div>
+            <div class="soft-card" style="margin-top:14px;">
+              <div class="section-kicker">Философия</div>
+              <p style="font-weight:700;color:#5b4a32;">Одно большое дело в день. Утро - акцент, 13:00-16:30 - сиеста и тень, вечер - мягкая прогулка.</p>
+            </div>
+            <div class="soft-card" style="margin-top:14px;">
+              <div class="section-kicker">Ближайшие решения</div>
+              <div class="event-list" id="prep-list" style="margin-top:10px;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-overview" data-view="overview">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">Обзор маршрута</h2>
+            <p class="view-note">Три дыхания поездки: города и Альпы с машиной, затем море как большая пауза, затем Венеция и Рим в режиме ранних стартов.</p>
+          </div>
+        </div>
+        <div class="feature-card" style="min-height:310px;background:linear-gradient(180deg,rgba(20,12,6,.12),rgba(20,12,6,.72)),linear-gradient(165deg,#caa06f 0%,#9a6b48 46%,#3f6f6a 100%);">
+          <div class="feature-card-content">
+            <div class="mini-label" style="color:rgba(255,253,249,.76);">27 июля - 22 августа · 6 человек</div>
+            <h3>Лето между Альпами, Адриатикой и Римом</h3>
+          </div>
+        </div>
+        <div class="stat-grid" style="margin-top:16px;">
+          <div class="rail-stat"><span class="mini-label">Старт</span><strong>27.07</strong></div>
+          <div class="rail-stat"><span class="mini-label">Финиш</span><strong>22.08</strong></div>
+          <div class="rail-stat"><span class="mini-label">Темп</span><strong>1 big thing</strong></div>
+        </div>
+        <div class="soft-card" style="margin-top:16px;">
+          <div class="section-kicker">Маршрут · 9 этапов</div>
+          <div class="route-list" id="overview-route"></div>
+        </div>
+        <div class="section-kicker" style="margin:24px 0 12px;">Перелёты и переезды</div>
+        <div class="flight-grid" id="flight-list"></div>
+      </section>
+
+      <section class="view" id="view-plan" data-view="plan">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">План по городам</h2>
+            <p class="view-note">Каждый этап раскрывается как маленькая карточка города: вкус, настроение, дети и конкретные события.</p>
+          </div>
+        </div>
+        <div class="plan-list" id="plan-list"></div>
+      </section>
+
+      <section class="view" id="view-map" data-view="map">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">Маршрут на карте</h2>
+            <p class="view-note">Пины показывают основные этапы маршрута. Это лёгкая offline-схема, а не полноценная карта с пробками и расписаниями.</p>
+          </div>
+        </div>
+        <div class="map-card" id="map-card"></div>
+        <div class="map-legend" id="map-legend"></div>
+      </section>
+
+      <section class="view" id="view-budget" data-view="budget">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">Бюджет</h2>
+            <p class="view-note">Только подтверждённые брони. Курс ЦБ РФ 27.06.2026 + 2.5% буфер.</p>
           </div>
         </div>
         <div class="budget-wrap">
-          <div class="donut">
-            <div class="donut-center">
-              <div>
-                <div class="subtle">Сводка</div>
-                <strong class="budget-center-value">перед поездкой</strong>
+          <div>
+            <div class="budget-donut">
+              <div class="budget-center">
+                <div>
+                  <div class="mini-label">Подтверждено</div>
+                  <strong id="budget-center">≈2.55 млн ₽</strong>
+                </div>
+              </div>
+            </div>
+            <div class="budget-mini-stats">
+              <div class="rail-stat"><span class="mini-label">На человека</span><strong>≈425 К ₽</strong></div>
+              <div class="rail-stat"><span class="mini-label">В день</span><strong>≈94 К ₽</strong></div>
+            </div>
+          </div>
+          <div>
+            <p class="view-note" id="budget-summary" style="margin-top:0;"></p>
+            <div class="pill-row" id="budget-rates" style="margin:14px 0;"></div>
+            <div class="budget-list" id="budget-list"></div>
+            <div class="soft-card" style="margin-top:14px;">
+              <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;">
+                <strong>Итого в рублях</strong>
+                <strong id="budget-total" style="color:var(--accent);font-size:22px;"></strong>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-tips" data-view="tips">
+        <div class="view-header">
           <div>
-            <p id="budget-summary" class="budget-summary"></p>
-            <div id="budget-rates" class="budget-rates"></div>
-            <div id="budget-list" class="budget-list"></div>
-            <div class="budget-total">
-              <span>Итого в рублях</span>
-              <span class="budget-total-value" style="color: var(--accent);">приоритеты</span>
-            </div>
+            <h2 class="view-title">Редакторский блок</h2>
+            <p class="view-note">Не памятка, а готовая редакторская версия маршрута: что попробовать, что смотреть, что бронировать и где детям будет хорошо.</p>
           </div>
         </div>
-      </div>
-    </section>
+        <div class="filter-row" id="tip-filters"></div>
+        <div class="tips-grid" id="tips-grid"></div>
+      </section>
 
-    <section id="section-tips" class="tab-section hidden">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Редакторский Блок</h2>
-          <p class="section-note">Не памятка, а готовая редакторская версия маршрута: что пробовать, что смотреть, что покупать и где детям будет по-настоящему хорошо.</p>
-        </div>
-      </div>
-      <div id="tip-filters" class="pill-row"></div>
-      <div id="tips-container" class="grid grid-2" style="margin-top: 18px;"></div>
-    </section>
-
-    <section id="section-ai" class="tab-section hidden">
-      <div class="card pad-xl chat-shell">
-        <div class="section-header" style="margin-bottom: 10px;">
+      <section class="view" id="view-ai" data-view="ai">
+        <div class="view-header">
           <div>
-            <h2 class="section-title">ИИ-консьерж ✨</h2>
-            <p class="section-note">Персональные советы по гастрономии, детям, жаре, коляске, бронированиям и ритму всей поездки.</p>
+            <h2 class="view-title">ИИ-консьерж ✨</h2>
+            <p class="view-note">Персональные советы по гастрономии, детям, жаре, коляске, бронированиям и ритму всей поездки.</p>
           </div>
         </div>
-
-        <div id="concierge-warning" class="warning hidden"></div>
-
-        <div id="ai-chat-history" class="chat-history">
-          <div class="message bot">
-            Привет! Я ваш travel-консьерж по поездке «Европа лето 2026». Спросите меня, как собрать лучший день в Анси, чем заменить жаркий музейный блок, какие брони сделать первыми или где ужинать с детьми в Венеции и Риме.
-          </div>
+        <div class="warning" id="ai-status" style="margin-bottom:16px;"></div>
+        <div class="chat-card">
+          <div class="chat-history" id="chat-history"></div>
+          <form class="chat-form" id="chat-form">
+            <textarea class="chat-input" id="chat-input" rows="2" placeholder="Спросить: как лучше разложить день в Анси?"></textarea>
+            <button class="send-btn" id="send-btn" type="submit">Отправить</button>
+          </form>
         </div>
+      </section>
+    </main>
+  </div>
 
-        <div class="quick-grid">
-          <button class="quick-btn" data-prompt="Собери лучший день в Анси с коляской: старый город утром, электролодка, пляж и ужин без перегруза.">Анси без перегруза 🚤</button>
-          <button class="quick-btn" data-prompt="Разложи 06.08 Базель — Венеция — Езоло по времени так, чтобы не опоздать на easyJet и не убиться с багажом.">Сложный день 06.08 ✈️</button>
-          <button class="quick-btn" data-prompt="Какие брони нужно сделать первыми: Рим, Венеция, трансферы, рестораны и что проверить по датам?">Что бронировать сейчас 📌</button>
-          <button class="quick-btn" data-prompt="Собери мягкий план Рима в жару: Колизей, Ватикан, Боргезе, Трастевере и прохладные замены.">Рим в жару 🏛️</button>
-        </div>
+  <nav class="bottom-nav" id="bottom-tabs" aria-label="Разделы"></nav>
 
-        <div class="chat-input-wrap">
-          <input id="ai-input" class="chat-input" type="text" placeholder="Например: что делать в Женеве, если жарко и музеи закрыты по понедельникам?" />
-          <button id="send-btn" class="send-btn" aria-label="Отправить">➜</button>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">
-      <p>Маршрут собран как лёгкое семейное travel-приложение: меньше технических деталей, больше ритма, вкуса и понятных решений на каждый день.</p>
-      <p>Travel-приложение работает офлайн по основному маршруту; ИИ-консьержу нужен интернет и подключённый backend.</p>
-    </div>
-  </main>
+  <footer class="app-footer">
+    <p>Travel-приложение работает офлайн по основному маршруту. ИИ-консьержу нужен интернет и подключённый backend.</p>
+  </footer>
 
   <script>
-    const appData = window.EUROPE2026_DATA;
-    if (!appData) {
-      throw new Error('EUROPE2026_DATA is not loaded');
-    }
+    const appData = window.EUROPE2026_DATA || {};
+    const appConfig = window.EUROPE2026_CONFIG || {};
 
-    const APP_CONFIG = window.TRIP2026_CONFIG || {};
-    const CONCIERGE_API_URL = String(APP_CONFIG.conciergeApiUrl || '').trim();
-    const AI_READY = Boolean(CONCIERGE_API_URL) && !CONCIERGE_API_URL.includes('REPLACE-WITH-YOUR-VERCEL-PROJECT');
-    const aiConversation = [];
+    const tabs = [
+      { id: 'today', label: 'Сегодня', icon: '◉' },
+      { id: 'overview', label: 'Обзор', icon: '◎' },
+      { id: 'plan', label: 'План', icon: '≡' },
+      { id: 'map', label: 'Карта', icon: '⊕' },
+      { id: 'budget', label: 'Бюджет', icon: '₽' },
+      { id: 'tips', label: 'Советы', icon: '✧' },
+      { id: 'ai', label: 'Консьерж', icon: '✦' }
+    ];
 
-    function rub(value) {
-      return value.toLocaleString('ru-RU') + ' ₽';
-    }
+    const mapPositions = [
+      { x: 82, y: 82 }, { x: 26, y: 44 }, { x: 38, y: 52 }, { x: 42, y: 39 },
+      { x: 50, y: 27 }, { x: 72, y: 36 }, { x: 76, y: 43 }, { x: 68, y: 66 }, { x: 82, y: 82 }
+    ];
 
-    function escapeHtml(text) {
-      return String(text)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-    }
+    const todayPlan = [
+      { time: '08:00', title: 'Сборы и завтрак', desc: 'Утреннюю прогулку по Базелю делать только если всё собрано.', risk: false },
+      { time: '11:00', title: 'Возврат Dacia Jogger', desc: 'EuroAirport, French sector, F10 Car Rental. Целиться на 12:00-12:30, не на 14:00.', risk: true },
+      { time: '15:25', title: 'easyJet EZS1129 → Venice', desc: '1 ч 10 мин. Багаж, коляска и PNR KCSCQQ9 под рукой.', risk: true },
+      { time: '17:30', title: 'Минивэн → Victoria Frontemare', desc: 'Частный трансфер с креслами. Начало 9 ночей моря.', risk: false }
+    ];
 
-    function formatAiText(text) {
-      const safe = escapeHtml(text);
-      return safe
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>');
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[char]));
     }
 
     function stripHtml(value) {
-      return String(value).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      const el = document.createElement('div');
+      el.innerHTML = value || '';
+      return el.textContent || el.innerText || '';
     }
 
-    function showTab(id) {
-      document.querySelectorAll('.tab-section').forEach((section) => {
-        section.classList.toggle('hidden', section.id !== `section-${id}`);
+    function switchTab(tabId) {
+      document.querySelectorAll('.view').forEach((view) => {
+        view.classList.toggle('active', view.dataset.view === tabId);
       });
-      document.querySelectorAll('.tab-btn').forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.tab === id);
+      document.querySelectorAll('[data-tab-target]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.tabTarget === tabId);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderTabs() {
+      const desktop = document.getElementById('desktop-tabs');
+      const bottom = document.getElementById('bottom-tabs');
+      desktop.innerHTML = tabs.map((tab) => `
+        <button class="tab-btn ${tab.id === 'today' ? 'active' : ''}" data-tab-target="${tab.id}" type="button">${escapeHtml(tab.label)}</button>
+      `).join('');
+      bottom.innerHTML = tabs.map((tab) => `
+        <button class="bottom-tab ${tab.id === 'today' ? 'active' : ''}" data-tab-target="${tab.id}" type="button"><span>${escapeHtml(tab.icon)}</span>${escapeHtml(tab.label)}</button>
+      `).join('');
+      document.querySelectorAll('[data-tab-target]').forEach((button) => {
+        button.addEventListener('click', () => switchTab(button.dataset.tabTarget));
       });
     }
 
-    function inferEventChips(event) {
-      const text = `${event.time} ${event.title} ${event.desc}`.toLowerCase();
-      const chips = [];
-      if (/ужин|завтрак|обед|бушон|фондю|раклет|чикетти|карбонар|джелато|рыб|vongole|spritz|просекко|кнели/.test(text)) chips.push('еда');
-      if (/отель|тишин|спокой|передышк|сиеста|сон|пляж|сад|пауза|акклиматизац/.test(text)) chips.push('спокойно');
-      if (/поезд|рейс|вылет|перел|терминал|переезд|машин|авто|трансфер|вапоретто|easyjet|шаттл/.test(text)) chips.push('логистика');
-      if (/дет|коляск|младен|эрго|аквапарк|caribe|tropicarium|лодк|катер|медвед|фонтан/.test(text)) chips.push('детям зайдёт');
-      if (/фурвьер|анси|салев|озер|венеци|рим|колиз|ватикан|бурaно|бурано|san marco|сан-марко|трастевере/.test(text)) chips.push('атмосфера');
-      return chips.slice(0, 3);
+    function renderRoute(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = (appData.cities || []).map((city, index) => `
+        <div class="route-stop ${index === 5 ? 'active' : ''}">
+          <span class="route-dot" style="background:${city.color || '#2f7d74'}"></span>
+          <strong>${escapeHtml(city.name)}${index === 5 ? ' <span style="color:var(--accent);font-size:11px;">· море</span>' : ''}</strong>
+          <time>${escapeHtml(city.dates)}</time>
+        </div>
+      `).join('');
     }
 
-    function inferCityEditorial(city) {
-      const base = {
-        taste: 'Медленный завтрак, один сильный вкусовой акцент днём и красивый ужин без суеты.',
-        mood: city.blurb || '',
-        withKids: 'Лучше идти короткими блоками и оставлять запас на отдых после обеда.'
-      };
-      return city.editorial || base;
+    function renderToday() {
+      document.getElementById('today-title').textContent = 'Среда, 6 августа';
+      document.getElementById('today-subtitle').textContent = 'Базель → Венеция → Лидо-ди-Езоло';
+      document.getElementById('today-weather').innerHTML = `
+        <span class="pill">☀ Базель 24°</span>
+        <span class="pill">☀ Езоло 31°</span>
+      `;
+      document.getElementById('today-warning').innerHTML = `
+        <span style="font-size:18px;line-height:1;">⚠</span>
+        <span><strong>Главный логистический день</strong>Вернуть Dacia к 12:00-12:30, не к 14:00. Подтвердить по PNR, что easyJet летит сегодня.</span>
+      `;
+      document.getElementById('today-timeline').innerHTML = todayPlan.map((item) => `
+        <div class="timeline-row ${item.risk ? 'is-risk' : ''}">
+          <div class="timeline-time">${escapeHtml(item.time)}</div>
+          <div class="timeline-body">
+            <strong>${escapeHtml(item.title)}</strong>
+            <p>${escapeHtml(item.desc)}</p>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('prep-list').innerHTML = (appData.bookingPriorities || []).slice(0, 3).map((item) => `
+        <div class="event-card">
+          <strong>${escapeHtml(item.split('.')[0])}</strong>
+          <p>${escapeHtml(item)}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderFlights() {
+      const list = document.getElementById('flight-list');
+      list.innerHTML = (appData.flights || []).map((flight) => `
+        <article class="flight-card">
+          <div>
+            <div class="mini-label">${escapeHtml(flight.date)}</div>
+            <div class="code">${escapeHtml(flight.from.code)} ${escapeHtml(flight.from.time)}</div>
+            <div class="city">${escapeHtml(flight.from.city)}</div>
+          </div>
+          <div class="flight-arrow">
+            <span>${escapeHtml(flight.flightNo)}</span>
+            <span>→</span>
+            <span>${escapeHtml(flight.duration)}</span>
+          </div>
+          <div>
+            <div class="mini-label">${escapeHtml(flight.airline || flight.status)}</div>
+            <div class="code">${escapeHtml(flight.to.code)} ${escapeHtml(flight.to.time)}</div>
+            <div class="city">${escapeHtml(flight.to.city)}</div>
+          </div>
+        </article>
+      `).join('');
     }
 
     function renderPlan() {
-      const container = document.getElementById('plan-container');
-      container.innerHTML = appData.cities.map((city, index) => {
-        const highlightsHtml = (city.highlights || []).map((item) => `
-          <span class="accordion-chip">${escapeHtml(item)}</span>
-        `).join('');
-        const editorial = inferCityEditorial(city);
-
-        const eventsHtml = city.events.map((event) => {
-          const chips = inferEventChips(event).map((item) => `
-            <span class="timeline-chip">${escapeHtml(item)}</span>
-          `).join('');
-
-          return `
-          <div class="timeline-item" style="color:${city.color}">
-            <div class="timeline-card">
-              <span class="timeline-time">${escapeHtml(event.time)}</span>
-              ${chips ? `<div class="timeline-chip-row">${chips}</div>` : ''}
-              <h3 class="timeline-title" style="color: var(--text);">${escapeHtml(event.title)}</h3>
-              <p class="timeline-desc">${escapeHtml(stripHtml(event.desc))}</p>
+      const list = document.getElementById('plan-list');
+      list.innerHTML = (appData.cities || []).map((city, index) => `
+        <article class="city-card ${index === 0 ? 'open' : ''}">
+          <button class="city-button" type="button" data-city-index="${index}">
+            <div>
+              <div class="stage-row">
+                <span class="stage-chip">Этап ${index + 1}</span>
+                <span class="mini-label">${escapeHtml(city.dates)}</span>
+              </div>
+              <h3>${escapeHtml(city.name)}</h3>
+              <p>${escapeHtml(city.blurb)}</p>
+            </div>
+            <span class="city-open">+</span>
+          </button>
+          <div class="city-detail">
+            <div class="editorial-grid">
+              <div class="soft-card"><div class="section-kicker">Taste</div><p>${escapeHtml(city.editorial?.taste || '')}</p></div>
+              <div class="soft-card"><div class="section-kicker">Mood</div><p>${escapeHtml(city.editorial?.mood || '')}</p></div>
+              <div class="soft-card"><div class="section-kicker">With kids</div><p>${escapeHtml(city.editorial?.withKids || '')}</p></div>
+            </div>
+            <div class="event-list">
+              ${(city.events || []).map((event) => `
+                <div class="event-card">
+                  <time>${escapeHtml(event.time)}</time>
+                  <strong>${escapeHtml(event.title)}</strong>
+                  <p>${escapeHtml(stripHtml(event.desc))}</p>
+                </div>
+              `).join('')}
             </div>
           </div>
-        `;
-        }).join('');
-
-        return `
-          <article class="accordion-item" data-accordion="${index}" style="--city:${city.color}">
-            <div class="accordion-head">
-              <div>
-                <div class="accordion-meta">
-                  <span class="accordion-stage">Этап ${index + 1}</span>
-                  <span class="accordion-dates" style="color:${city.color}">${escapeHtml(city.dates)}</span>
-                </div>
-                <h3 class="accordion-title">${escapeHtml(city.name)}</h3>
-                ${city.blurb ? `<p class="accordion-blurb">${escapeHtml(city.blurb)}</p>` : ''}
-                ${highlightsHtml ? `<div class="accordion-chip-row">${highlightsHtml}</div>` : ''}
-              </div>
-              <div class="accordion-toggle">+</div>
-            </div>
-            <div class="accordion-body">
-              <div class="city-editorial">
-                <article class="city-editorial-card">
-                  <span>Taste</span>
-                  <p>${escapeHtml(editorial.taste)}</p>
-                </article>
-                <article class="city-editorial-card">
-                  <span>Mood</span>
-                  <p>${escapeHtml(editorial.mood)}</p>
-                </article>
-                <article class="city-editorial-card">
-                  <span>With Kids</span>
-                  <p>${escapeHtml(editorial.withKids)}</p>
-                </article>
-              </div>
-              <div class="timeline">${eventsHtml}</div>
-            </div>
-          </article>
-        `;
-      }).join('');
-
-      container.querySelectorAll('.accordion-item').forEach((item) => {
-        item.querySelector('.accordion-head').addEventListener('click', () => {
-          item.classList.toggle('open');
+        </article>
+      `).join('');
+      list.querySelectorAll('[data-city-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const card = button.closest('.city-card');
+          card.classList.toggle('open');
         });
       });
     }
 
-    function renderFlights() {
-      const container = document.getElementById('flight-list');
-      container.innerHTML = appData.flights.map((flight) => `
-        <article class="flight-card">
-          <div class="flight-top">
-            <div>
-              <div class="flight-pnr">Rez. (PNR) No: <code>${escapeHtml(flight.pnr)}</code></div>
-              <div class="flight-passengers">${escapeHtml(flight.passengers)}</div>
-            </div>
-            <div class="flight-badge">${escapeHtml(flight.status)}</div>
-          </div>
-          <div class="flight-route">
-            <div class="flight-leg">
-              <div class="flight-date">${escapeHtml(flight.date)}</div>
-              <div class="flight-city">Terminal: ${escapeHtml(flight.from.terminal)}</div>
-              <div class="flight-code">${escapeHtml(flight.from.code)}</div>
-              <div class="flight-city">${escapeHtml(flight.from.city)}</div>
-              <div class="flight-time">${escapeHtml(flight.from.time)}</div>
-            </div>
-            <div class="flight-mid">
-              <div>${escapeHtml(flight.flightNo)}</div>
-              <div class="flight-mid-line">${escapeHtml(flight.duration)} <span>→</span></div>
-            </div>
-            <div class="flight-leg">
-              <div class="flight-date">${escapeHtml(flight.date)}</div>
-              <div class="flight-city">Terminal: ${escapeHtml(flight.to.terminal)}</div>
-              <div class="flight-code">${escapeHtml(flight.to.code)}</div>
-              <div class="flight-city">${escapeHtml(flight.to.city)}</div>
-              <div class="flight-time">${escapeHtml(flight.to.time)}</div>
-            </div>
-          </div>
-          <div class="flight-meta">
-            <span class="flight-chip">${escapeHtml(flight.airline || 'Flight')} ${escapeHtml(flight.flightNo)}</span>
-            <span class="flight-chip">${escapeHtml(flight.duration)}</span>
-            <span class="flight-chip">${escapeHtml(flight.note)}</span>
-          </div>
-        </article>
+    function renderMap() {
+      const map = document.getElementById('map-card');
+      const cities = appData.cities || [];
+      const polyline = mapPositions.map((point) => `${point.x * 5},${point.y * 4.2}`).join(' ');
+      map.innerHTML = `
+        <svg class="map-line" viewBox="0 0 500 420" aria-hidden="true">
+          <polyline points="${polyline}" fill="none" stroke="#c1572f" stroke-width="3" stroke-dasharray="4 9" stroke-linecap="round" opacity="0.86"></polyline>
+        </svg>
+        ${cities.map((city, index) => {
+          const pos = mapPositions[index] || { x: 50, y: 50 };
+          return `<button class="map-pin ${index === 5 ? 'active' : ''}" type="button" title="${escapeHtml(city.name)}" style="left:${pos.x}%;top:${pos.y}%;background:${city.color || '#2f7d74'}">${index + 1}</button>`;
+        }).join('')}
+        <div class="mini-label" style="position:absolute;right:12px;bottom:12px;background:rgba(255,253,249,.7);padding:5px 8px;border-radius:8px;">offline-схема</div>
+      `;
+      document.getElementById('map-legend').innerHTML = cities.map((city, index) => `
+        <div class="route-stop ${index === 5 ? 'active' : ''}">
+          <span class="route-dot" style="background:${city.color || '#2f7d74'}"></span>
+          <strong>${escapeHtml(city.name)}</strong>
+          <time>${escapeHtml(city.dates)}</time>
+        </div>
       `).join('');
     }
 
     function renderBudget() {
-      const weights = appData.budget.map((item) => item.weight || item.val || 1);
-      const total = weights.reduce((sum, val) => sum + val, 0);
-      const showPercent = appData.budgetShowPercent !== false;
-      const showBars = appData.budgetShowBars !== false;
-      document.querySelectorAll('.budget-center-value').forEach((el) => {
-        el.textContent = appData.budgetCenterLabel || 'перед поездкой';
-      });
-      document.querySelectorAll('.budget-total-value').forEach((el) => {
-        el.textContent = appData.budgetTotalLabel || 'приоритеты';
-      });
-      const summary = document.getElementById('budget-summary');
-      if (summary) {
-        summary.textContent = appData.budgetSummary || '';
-        summary.hidden = !appData.budgetSummary;
-      }
-      const rates = document.getElementById('budget-rates');
-      if (rates) {
-        const rateData = appData.budgetRates;
-        rates.hidden = !rateData;
-        rates.innerHTML = rateData ? [
-          `<span class="budget-rate-chip">${escapeHtml(rateData.label)}</span>`,
-          ...(rateData.rows || []).map((row) => `<span class="budget-rate-chip">${escapeHtml(row)}</span>`)
-        ].join('') : '';
-      }
-      const list = document.getElementById('budget-list');
-      list.innerHTML = appData.budget.map((item, index) => {
-        const pct = ((weights[index] / total) * 100).toFixed(1);
-        const amount = item.display || rub(item.val);
-        const meta = showPercent ? ` · <span class="subtle">${pct}%</span>` : '';
-        const note = item.note ? `<div class="budget-item-note">${escapeHtml(item.note)}</div>` : '';
-        const rubAmount = item.rub ? `<span class="budget-rub">${escapeHtml(item.rub)}</span>` : '';
-        const lines = Array.isArray(item.lines) ? `
-          <div class="budget-lines">
-            ${item.lines.map((line) => `
-              <div class="budget-line">
-                <span>${escapeHtml(line[0])}</span>
-                <strong>${escapeHtml(line[1])}</strong>
-              </div>
-            `).join('')}
-          </div>
-        ` : '';
-        const bar = showBars ? `<div class="bar"><span style="width:${pct}%; background:${item.color};"></span></div>` : '';
+      const budget = appData.budget || [];
+      const total = budget.reduce((sum, item) => sum + (item.val || 0), 0) || 1;
+      document.getElementById('budget-center').textContent = appData.budgetCenterLabel || '≈2.55 млн ₽';
+      document.getElementById('budget-total').textContent = appData.budgetTotalLabel || '';
+      document.getElementById('budget-summary').textContent = appData.budgetSummary || '';
+      document.getElementById('budget-rates').innerHTML = appData.budgetRates ? [
+        `<span class="pill">${escapeHtml(appData.budgetRates.label)}</span>`,
+        ...(appData.budgetRates.rows || []).map((row) => `<span class="pill">${escapeHtml(row)}</span>`)
+      ].join('') : '';
+      document.getElementById('budget-list').innerHTML = budget.map((item) => {
+        const pct = ((item.val || 0) / total * 100).toFixed(1);
+        const color = item.color || '#c1572f';
         return `
-          <div class="budget-item">
-            <div class="budget-item-top">
-              <div><span class="dot" style="background:${item.color}"></span><strong>${escapeHtml(item.item)}</strong></div>
-              <div class="budget-amounts"><strong>${escapeHtml(amount)}</strong>${rubAmount}<span>${meta.replace(/^ · /, '')}</span></div>
+          <article class="budget-card">
+            <div class="budget-top">
+              <h3><span class="budget-dot" style="background:${color}"></span>${escapeHtml(item.item)}</h3>
+              <div class="budget-amount">${escapeHtml(item.rub || item.display || '')}<span>${escapeHtml(pct)}%</span></div>
             </div>
-            ${note}
-            ${lines}
-            ${bar}
-          </div>
+            <p>${escapeHtml(item.note || item.display || '')}</p>
+            <div class="bar"><span style="width:${pct}%;background:${color}"></span></div>
+            <div class="budget-lines">
+              ${(item.lines || []).map((line) => `
+                <div class="budget-line">
+                  <span>${escapeHtml(line[0])}</span>
+                  <strong>${escapeHtml(line[1])}</strong>
+                </div>
+              `).join('')}
+            </div>
+          </article>
         `;
       }).join('');
     }
 
-    function renderTips(filter = 'Все') {
-      const container = document.getElementById('tips-container');
-      const tips = filter === 'Все'
-        ? appData.tips
-        : appData.tips.filter((tip) => tip.cat.includes(filter));
-      container.innerHTML = tips.map((tip) => `
+    function renderTips(active = 'Все') {
+      const filters = ['Все', ...Array.from(new Set((appData.tips || []).map((tip) => tip.cat)))];
+      document.getElementById('tip-filters').innerHTML = filters.map((filter) => `
+        <button class="filter-btn ${filter === active ? 'active' : ''}" type="button" data-tip-filter="${escapeHtml(filter)}">${escapeHtml(filter)}</button>
+      `).join('');
+      const tips = active === 'Все'
+        ? appData.tips || []
+        : (appData.tips || []).filter((tip) => tip.cat === active);
+      document.getElementById('tips-grid').innerHTML = tips.map((tip) => `
         <article class="tip-card">
-          <span class="tip-cat">${escapeHtml(tip.cat)}</span>
-          <h3 class="tip-title">${escapeHtml(tip.title)}</h3>
-          ${tip.sub ? `<p class="tip-sub">${escapeHtml(tip.sub)}</p>` : ''}
-          <p class="tip-text">${escapeHtml(tip.text)}</p>
-          ${tip.footer ? `<div class="tip-footer">${escapeHtml(tip.footer)}</div>` : ''}
+          <div class="section-kicker">${escapeHtml(tip.cat)}</div>
+          <h3>${escapeHtml(tip.title)}</h3>
+          <p style="color:#7a4a2e;font-weight:700;">${escapeHtml(tip.sub)}</p>
+          <p>${escapeHtml(tip.text)}</p>
+          <footer>${escapeHtml(tip.footer)}</footer>
         </article>
       `).join('');
-    }
-
-    function renderTipFilters() {
-      const categories = ['Все', ...new Set(appData.tips.map((tip) => tip.cat))];
-      const row = document.getElementById('tip-filters');
-      row.innerHTML = categories.map((cat, i) => `
-        <button class="pill ${i === 0 ? 'active' : ''}" data-filter="${escapeHtml(cat)}">${escapeHtml(cat)}</button>
-      `).join('');
-      row.querySelectorAll('.pill').forEach((pill) => {
-        pill.addEventListener('click', () => {
-          row.querySelectorAll('.pill').forEach((p) => p.classList.remove('active'));
-          pill.classList.add('active');
-          renderTips(pill.dataset.filter);
-        });
+      document.querySelectorAll('[data-tip-filter]').forEach((button) => {
+        button.addEventListener('click', () => renderTips(button.dataset.tipFilter));
       });
-    }
-
-    function updateAiState() {
-      const warning = document.getElementById('concierge-warning');
-      const input = document.getElementById('ai-input');
-      const sendBtn = document.getElementById('send-btn');
-      const quickButtons = document.querySelectorAll('.quick-btn');
-      if (!AI_READY) {
-        warning.classList.remove('hidden');
-        warning.innerHTML = 'Консьерж ещё не подключён. Откройте файл <code>config.js</code> и вставьте URL вашего backend на Vercel в поле <code>conciergeApiUrl</code>, затем закоммитьте изменения в GitHub.';
-        input.disabled = true;
-        sendBtn.disabled = true;
-        quickButtons.forEach((btn) => btn.disabled = true);
-      } else {
-        warning.classList.add('hidden');
-        input.disabled = false;
-        sendBtn.disabled = false;
-        quickButtons.forEach((btn) => btn.disabled = false);
-      }
-    }
-
-    function addMessage(role, content, isLoading = false) {
-      const history = document.getElementById('ai-chat-history');
-      const el = document.createElement('div');
-      el.className = `message ${role === 'user' ? 'user' : 'bot'}${isLoading ? ' loading' : ''}`;
-      if (isLoading) {
-        el.textContent = content;
-      } else if (role === 'bot') {
-        el.innerHTML = formatAiText(content);
-      } else {
-        el.textContent = content;
-      }
-      history.appendChild(el);
-      history.scrollTop = history.scrollHeight;
-      return el;
     }
 
     function buildContext() {
       return {
         tripName: 'Европа 2026',
-        travelers: {
-          adults: 3,
-          adultsInfo: [
-            { name: 'Тимур', role: 'организация' },
-            { name: 'Алена', role: 'семейная логистика' },
-            { name: 'Лариса', age: 69, role: 'старший путешественник' }
-          ],
-          children: [
-            { name: 'София', age: '10 месяцев' },
-            { name: 'Дамир', age: 7 },
-            { name: 'Даня', age: 10 }
-          ]
-        },
-        travelPrinciples: [
-          'Одно большое дело в день',
-          'Вторая половина дня должна быть гибкой',
-          'Коляска и короткие переходы важнее плотной программы'
-        ],
         flights: appData.flights,
-        cities: appData.cities.map((city) => ({
-          name: city.name,
-          dates: city.dates,
-          events: city.events.map((event) => ({
-            time: event.time,
-            title: event.title,
-            desc: stripHtml(event.desc)
-          }))
-        })),
+        cities: appData.cities,
         budget: appData.budget,
         budgetSummary: appData.budgetSummary,
-        budgetRates: appData.budgetRates,
-        bookingPriorities: appData.bookingPriorities,
         risks: appData.risks,
         tips: appData.tips
       };
     }
 
-    async function callConcierge(question, history) {
-      const response = await fetch(CONCIERGE_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question,
-          history,
-          context: buildContext()
-        })
-      });
-
-      if (!response.ok) {
-        let text = '';
-        try { text = await response.text(); } catch (err) {}
-        throw new Error(text || `HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data.answer || 'Не удалось получить ответ.';
-    }
-
-    async function askAI(question) {
-      if (!AI_READY || !question.trim()) return;
-      showTab('ai');
-      const cleanQuestion = question.trim();
-      const historyForRequest = aiConversation.slice(-8);
-      addMessage('user', cleanQuestion);
-      aiConversation.push({ role: 'user', content: cleanQuestion });
-      const loading = addMessage('bot', 'Думаю', true);
-
-      try {
-        const answer = await callConcierge(cleanQuestion, historyForRequest);
-        loading.classList.remove('loading');
-        loading.innerHTML = formatAiText(answer);
-        aiConversation.push({ role: 'assistant', content: answer });
-      } catch (error) {
-        console.error(error);
-        loading.classList.remove('loading');
-        loading.innerHTML = 'Не удалось связаться с консьержем. Проверьте URL backend в <code>config.js</code> и что проект на Vercel уже задеплоен.';
-      }
-
-      const history = document.getElementById('ai-chat-history');
+    function appendMessage(role, text) {
+      const history = document.getElementById('chat-history');
+      const item = document.createElement('div');
+      item.className = `message ${role}`;
+      item.textContent = text;
+      history.appendChild(item);
       history.scrollTop = history.scrollHeight;
     }
 
-    function bindEvents() {
-      document.querySelectorAll('.tab-btn').forEach((btn) => {
-        btn.addEventListener('click', () => showTab(btn.dataset.tab));
-      });
-
-      document.getElementById('open-ai-banner').addEventListener('click', () => showTab('ai'));
-
-      document.querySelectorAll('.quick-btn').forEach((btn) => {
-        btn.addEventListener('click', () => askAI(btn.dataset.prompt || ''));
-      });
-
-      const input = document.getElementById('ai-input');
-      const sendBtn = document.getElementById('send-btn');
-      sendBtn.addEventListener('click', () => {
-        const value = input.value;
+    function setupConcierge() {
+      const apiUrl = appConfig.conciergeApiUrl || '';
+      const status = document.getElementById('ai-status');
+      const input = document.getElementById('chat-input');
+      const button = document.getElementById('send-btn');
+      status.innerHTML = apiUrl
+        ? '<span>✦</span><span><strong>Консьерж подключён</strong>Можно задавать вопросы по маршруту, детям, жаре и бронированиям.</span>'
+        : '<span>✦</span><span><strong>Консьерж ещё не подключён</strong>Откройте config.js и вставьте URL backend в поле conciergeApiUrl, затем закоммитьте изменения.</span>';
+      appendMessage('bot', 'Привет! Я ваш travel-консьерж по поездке «Европа лето 2026». Спросите меня, как собрать лучший день в Анси, чем заменить жаркий музейный блок, какие брони сделать первыми или где ужинать с детьми.');
+      if (!apiUrl) {
+        input.disabled = true;
+        button.disabled = true;
+      }
+      document.getElementById('chat-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const question = input.value.trim();
+        if (!question || !apiUrl) return;
+        appendMessage('user', question);
         input.value = '';
-        askAI(value);
-      });
-      input.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          sendBtn.click();
+        button.disabled = true;
+        appendMessage('bot', 'Думаю...');
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question, context: buildContext() })
+          });
+          const data = await response.json();
+          const last = document.querySelector('#chat-history .message.bot:last-child');
+          last.textContent = data.answer || data.message || 'Не получилось получить ответ от консьержа.';
+        } catch (error) {
+          const last = document.querySelector('#chat-history .message.bot:last-child');
+          last.textContent = 'Консьерж сейчас недоступен. Проверьте backend URL и интернет.';
+        } finally {
+          button.disabled = false;
         }
       });
     }
 
     function registerServiceWorker() {
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch((error) => {
-            console.error('Service worker error', error);
-          });
-        });
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
       }
     }
 
-    renderPlan();
-    renderFlights();
-    renderBudget();
-    renderTipFilters();
-    renderTips('Все');
-    bindEvents();
-    updateAiState();
-    registerServiceWorker();
+    function init() {
+      renderTabs();
+      renderRoute('rail-route');
+      renderRoute('overview-route');
+      renderToday();
+      renderFlights();
+      renderPlan();
+      renderMap();
+      renderBudget();
+      renderTips();
+      setupConcierge();
+      registerServiceWorker();
+    }
+
+    init();
   </script>
 </body>
 </html>
