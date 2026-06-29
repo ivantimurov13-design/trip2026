@@ -94,7 +94,7 @@ window.EUROPE2026_DATA = {
     {
       name: "🇫🇷 Лион",
       dates: "28–30 июля",
-      color: "#c1572f",
+      color: "#2f6fb0",
       blurb: "Первый настоящий город поездки: Presqu'île, Старый Лион, трабули, фуникулёр на Фурвьер и один сильный ужин в бушоне.",
       highlights: ["трабули", "Фурвьер", "бушон"],
       editorial: {
@@ -263,7 +263,7 @@ window.EUROPE2026_DATA = {
       display: "17 949.30 EUR + 1 727.61 CHF",
       rub: "≈1 776 840 ₽",
       note: "9 подтверждённых броней: ISTPORT, Lyon, Annecy, Geneva, Basel, Jesolo, Venice, Rome, ISTPORT.",
-      color: "#c1572f",
+      color: "#2f6fb0",
       lines: [
         ["ISTPORT Garden 27–28.07", "256.06 EUR"],
         ["Carlton Lyon", "960.66 EUR"],
@@ -282,7 +282,7 @@ window.EUROPE2026_DATA = {
       display: "1 757.57 EUR + 2 225.50 USD + 70 413.96 TRY + 156 352 RUB",
       rub: "≈609 277 ₽",
       note: "5 подтверждённых сегментов: Turkish Airlines, easyJet и обратный Turkish Airlines.",
-      color: "#d99a3c",
+      color: "#f59e0b",
       lines: [
         ["TK0418 Москва -> Стамбул", "156 352 RUB"],
         ["TK1809 Стамбул -> Лион", "70 413.96 TRY"],
@@ -297,7 +297,7 @@ window.EUROPE2026_DATA = {
       display: "1 359.79 EUR",
       rub: "≈121 821 ₽",
       note: "Europcar Dacia Jogger Hybrid 155 7P на 7 дней. RUB guaranteed price 118 287 указан в письме как ориентир и не считается второй раз.",
-      color: "#2f7d74",
+      color: "#10b981",
       lines: [
         ["Europcar Lyon -> Basel-Mulhouse", "1 359.79 EUR"]
       ]
@@ -308,7 +308,7 @@ window.EUROPE2026_DATA = {
       display: "434.70 EUR",
       rub: "≈38 944 ₽",
       note: "Frecciarossa 9415 Venezia S. Lucia -> Roma Termini: билеты 416.70 EUR + места 18.00 EUR.",
-      color: "#7a6f9c",
+      color: "#8b5cf6",
       lines: [
         ["Trenitalia Venice -> Rome", "434.70 EUR"]
       ]
