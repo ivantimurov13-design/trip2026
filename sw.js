@@ -1,4 +1,4 @@
-const CACHE_NAME = 'europe-summer-2026-v3';
+const CACHE_NAME = 'europe-summer-2026-v4';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -28,7 +28,7 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(req.url);
 
-  if (url.pathname.endsWith('/config.js')) {
+  if (url.pathname.endsWith('/config.js') || url.pathname.endsWith('/data.js')) {
     event.respondWith(
       fetch(req).then((response) => {
         const copy = response.clone();
