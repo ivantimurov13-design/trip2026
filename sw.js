@@ -1,4 +1,4 @@
-const CACHE_NAME = 'europe-summer-2026-v2';
+const CACHE_NAME = 'europe-summer-2026-v3';
 const CORE_ASSETS = [
   './',
   './index.html',

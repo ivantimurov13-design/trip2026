@@ -573,7 +573,7 @@
       border-radius: 999px;
       position: relative;
       margin: 0 auto;
-      background: conic-gradient(#2f6fb0 0 16%, #10b981 16% 32%, #64748b 32% 48%, #8a6d3b 48% 64%, #ef4444 64% 80%, #f59e0b 80% 92%, #8b5cf6 92% 100%);
+      background: conic-gradient(#2f6fb0 0 69.77%, #f59e0b 69.77% 93.69%, #10b981 93.69% 98.47%, #8b5cf6 98.47% 100%);
       box-shadow: inset 0 0 0 1px rgba(36, 48, 65, 0.05), var(--shadow);
     }
     .donut::after {
@@ -613,6 +613,18 @@
       justify-content: space-between;
       gap: 12px;
     }
+    .budget-amounts {
+      display: grid;
+      gap: 4px;
+      justify-items: end;
+      text-align: right;
+      max-width: 56%;
+    }
+    .budget-rub {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 900;
+    }
     .budget-item-note {
       color: var(--muted);
       font-weight: 650;
@@ -624,6 +636,41 @@
       color: var(--muted);
       font-weight: 700;
       line-height: 1.6;
+    }
+    .budget-rates {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 16px;
+    }
+    .budget-rate-chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #285e9b;
+      border: 1px solid #dbeafe;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .budget-lines {
+      display: grid;
+      gap: 8px;
+      padding-top: 4px;
+    }
+    .budget-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 8px 0 0;
+      border-top: 1px solid #edf1f6;
+      color: #4f5f72;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .budget-line strong {
+      color: #1f2937;
+      white-space: nowrap;
     }
     .dot {
       width: 12px;
@@ -1032,6 +1079,16 @@
         align-items: flex-start;
         flex-direction: column;
       }
+      .budget-amounts {
+        justify-items: start;
+        max-width: none;
+        text-align: left;
+      }
+      .budget-line {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+      }
     }
   </style>
   <script src="./config.js"></script>
@@ -1166,7 +1223,7 @@
         <div class="section-header">
           <div>
             <h2 class="section-title">Бюджет и бронирования</h2>
-            <p class="section-note">Сводка по деньгам из consolidated-файла и будущие расходы на месте из подробного финального Markdown. Валюты показаны без конвертации.</p>
+            <p class="section-note">Только подтверждённые траты из consolidated-файла: отели, перелёты, авто и поезд. Внизу — примерный итог в рублях по расчётному курсу с буфером.</p>
           </div>
         </div>
         <div class="budget-wrap">
@@ -1180,9 +1237,10 @@
           </div>
           <div>
             <p id="budget-summary" class="budget-summary"></p>
+            <div id="budget-rates" class="budget-rates"></div>
             <div id="budget-list" class="budget-list"></div>
             <div class="budget-total">
-              <span>Сводка</span>
+              <span>Итого в рублях</span>
               <span class="budget-total-value" style="color: var(--accent);">приоритеты</span>
             </div>
           </div>
@@ -1425,20 +1483,41 @@
         summary.textContent = appData.budgetSummary || '';
         summary.hidden = !appData.budgetSummary;
       }
+      const rates = document.getElementById('budget-rates');
+      if (rates) {
+        const rateData = appData.budgetRates;
+        rates.hidden = !rateData;
+        rates.innerHTML = rateData ? [
+          `<span class="budget-rate-chip">${escapeHtml(rateData.label)}</span>`,
+          ...(rateData.rows || []).map((row) => `<span class="budget-rate-chip">${escapeHtml(row)}</span>`)
+        ].join('') : '';
+      }
       const list = document.getElementById('budget-list');
       list.innerHTML = appData.budget.map((item, index) => {
         const pct = ((weights[index] / total) * 100).toFixed(1);
         const amount = item.display || rub(item.val);
         const meta = showPercent ? ` · <span class="subtle">${pct}%</span>` : '';
         const note = item.note ? `<div class="budget-item-note">${escapeHtml(item.note)}</div>` : '';
+        const rubAmount = item.rub ? `<span class="budget-rub">${escapeHtml(item.rub)}</span>` : '';
+        const lines = Array.isArray(item.lines) ? `
+          <div class="budget-lines">
+            ${item.lines.map((line) => `
+              <div class="budget-line">
+                <span>${escapeHtml(line[0])}</span>
+                <strong>${escapeHtml(line[1])}</strong>
+              </div>
+            `).join('')}
+          </div>
+        ` : '';
         const bar = showBars ? `<div class="bar"><span style="width:${pct}%; background:${item.color};"></span></div>` : '';
         return `
           <div class="budget-item">
             <div class="budget-item-top">
               <div><span class="dot" style="background:${item.color}"></span><strong>${escapeHtml(item.item)}</strong></div>
-              <div><strong>${escapeHtml(amount)}</strong>${meta}</div>
+              <div class="budget-amounts"><strong>${escapeHtml(amount)}</strong>${rubAmount}<span>${meta.replace(/^ · /, '')}</span></div>
             </div>
             ${note}
+            ${lines}
             ${bar}
           </div>
         `;
@@ -1544,6 +1623,7 @@
         })),
         budget: appData.budget,
         budgetSummary: appData.budgetSummary,
+        budgetRates: appData.budgetRates,
         bookingPriorities: appData.bookingPriorities,
         risks: appData.risks,
         tips: appData.tips

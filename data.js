@@ -242,19 +242,77 @@ window.EUROPE2026_DATA = {
       ]
     }
   ],
-  budgetCenterLabel: "5 валют",
-  budgetTotalLabel: "подтверждено + на месте",
-  budgetShowPercent: false,
-  budgetShowBars: false,
-  budgetSummary: "Подтверждённые суммы из travel_europe_2026_consolidated.md без конвертации: EUR 21 501.36, CHF 1 727.61, USD 2 225.50, TRY 70 413.96, RUB 156 352. Ниже отдельно добавлены будущие расходы на месте из подробного финального Markdown.",
+  budgetCenterLabel: "≈2.55 млн ₽",
+  budgetTotalLabel: "≈2 546 900 ₽",
+  budgetShowPercent: true,
+  budgetShowBars: true,
+  budgetSummary: "Только подтверждённые траты из travel_europe_2026_consolidated.md: отели, перелёты, авто и поезд. Не включены будущие расходы на месте, рестораны и отдельные городские налоги, если они не входят в подтверждённую сумму брони.",
+  budgetRates: {
+    label: "Расчётный курс: ЦБ РФ на 27.06.2026 + 2.5% буфер",
+    rows: [
+      "EUR 89.59 ₽",
+      "CHF 97.71 ₽",
+      "USD 78.99 ₽",
+      "TRY 1.70 ₽"
+    ]
+  },
   budget: [
-    { item: "EUR подтверждено", val: 21501.36, display: "21 501.36 EUR", note: "Отели, easyJet, поезд, Europcar и европейские брони из consolidated-файла.", color: "#2f6fb0" },
-    { item: "CHF подтверждено", val: 1727.61, display: "1 727.61 CHF", note: "Novotel Geneve Centre и Movenpick Basel; завтраки/ранний заезд отражены в бронированиях.", color: "#10b981" },
-    { item: "USD подтверждено", val: 2225.5, display: "2 225.50 USD", note: "Сумма из consolidated-файла, оставлена без конвертации в общий итог.", color: "#64748b" },
-    { item: "TRY подтверждено", val: 70413.96, display: "70 413.96 TRY", note: "Turkish Airlines Istanbul -> Lyon по consolidated-файлу.", color: "#8a6d3b" },
-    { item: "RUB подтверждено", val: 156352, display: "156 352 RUB", note: "Turkish Airlines Moscow -> Istanbul. Отдельно в письмах указан Europcar guaranteed price 118 287 RUB.", color: "#ef4444" },
-    { item: "Расходы на месте", val: 1270, display: "~€950–1 270 + CHF 120–153", note: "Лодки Анси, виньетка/парковки, VCE -> Езоло, Caribe Bay, ACTV, водное такси, гондола, Ватикан, Пантеон и FCO.", color: "#f59e0b" },
-    { item: "Рестораны", val: 80, display: "без точной суммы", note: "В подробном Markdown рестораны размечены как €, €€ и €€€, поэтому в числовой итог не включены.", color: "#8b5cf6" }
+    {
+      item: "Отели",
+      val: 1776840,
+      display: "17 949.30 EUR + 1 727.61 CHF",
+      rub: "≈1 776 840 ₽",
+      note: "9 подтверждённых броней: ISTPORT, Lyon, Annecy, Geneva, Basel, Jesolo, Venice, Rome, ISTPORT.",
+      color: "#2f6fb0",
+      lines: [
+        ["ISTPORT Garden 27–28.07", "256.06 EUR"],
+        ["Carlton Lyon", "960.66 EUR"],
+        ["ibis Annecy", "1 595.01 EUR"],
+        ["Novotel Geneve Centre", "1 317.51 CHF"],
+        ["Movenpick Basel", "410.10 CHF"],
+        ["Victoria Frontemare Jesolo", "8 255.30 EUR"],
+        ["Hotel Saturnia Venice", "1 266.63 EUR"],
+        ["Sofitel Roma Villa Borghese", "5 380.32 EUR"],
+        ["ISTPORT Garden 21–22.08", "235.32 EUR"]
+      ]
+    },
+    {
+      item: "Перелёты",
+      val: 609277,
+      display: "1 757.57 EUR + 2 225.50 USD + 70 413.96 TRY + 156 352 RUB",
+      rub: "≈609 277 ₽",
+      note: "5 подтверждённых сегментов: Turkish Airlines, easyJet и обратный Turkish Airlines.",
+      color: "#f59e0b",
+      lines: [
+        ["TK0418 Москва -> Стамбул", "156 352 RUB"],
+        ["TK1809 Стамбул -> Лион", "70 413.96 TRY"],
+        ["easyJet Basel -> Venice", "553.68 EUR"],
+        ["TK1866 Rome -> Istanbul", "1 203.89 EUR"],
+        ["TK417 Istanbul -> Moscow", "2 225.50 USD"]
+      ]
+    },
+    {
+      item: "Авто",
+      val: 121821,
+      display: "1 359.79 EUR",
+      rub: "≈121 821 ₽",
+      note: "Europcar Dacia Jogger Hybrid 155 7P на 7 дней. RUB guaranteed price 118 287 указан в письме как ориентир и не считается второй раз.",
+      color: "#10b981",
+      lines: [
+        ["Europcar Lyon -> Basel-Mulhouse", "1 359.79 EUR"]
+      ]
+    },
+    {
+      item: "Поезд",
+      val: 38944,
+      display: "434.70 EUR",
+      rub: "≈38 944 ₽",
+      note: "Frecciarossa 9415 Venezia S. Lucia -> Roma Termini: билеты 416.70 EUR + места 18.00 EUR.",
+      color: "#8b5cf6",
+      lines: [
+        ["Trenitalia Venice -> Rome", "434.70 EUR"]
+      ]
+    }
   ],
   bookingPriorities: [
     "Галерея Боргезе, Колизей Full Experience, Музеи Ватикана, Базилика Сан-Марко, Пантеон.",
@@ -286,7 +344,7 @@ window.EUROPE2026_DATA = {
     { cat: "Что бронировать", title: "Трансферы, которые реально спасают", sub: "VCE, Ferragosto, ISTPORT", text: "VCE → Езоло нужен минивэн с детскими креслами. Езоло → Венеция на Ferragosto лучше заранее решить как отдельную логистику. ISTPORT-шаттлы заказать оба раза.", footer: "Comfort buys time" },
     { cat: "Что бронировать", title: "Рестораны, где стол важен", sub: "Бушоны, фондю, Венеция", text: "Daniel et Denise / Café des Fédérations, Le Fréti, Edelweiss и Bistrot de Venise лучше бронировать заранее. Для шести человек спонтанность быстро превращается в лишнюю ходьбу.", footer: "Table for six: plan ahead" },
     { cat: "Что бронировать", title: "Авто и виньетки", sub: "Crit'Air, e-vignette, Europcar", text: "Подтвердить Crit'Air у Europcar в Лионе, купить/проверить швейцарскую e-vignette и заранее сдвинуть возврат авто в Базеле на 12:00–12:30.", footer: "The 06.08 gatekeeper" },
-    { cat: "Бюджет", title: "Две базы бюджета", sub: "consolidated + подробный финальный Markdown", text: "Consolidated-файл даёт подтверждённые суммы по валютам без конвертации. Подробный финальный Markdown добавляет расходы, которые ещё нужно оплатить на месте: лодки, виньетка, парковки, трансферы, аквапарк, ACTV, гондола, Ватикан, Пантеон и FCO.", footer: "Confirmed: EUR 21 501.36 / CHF 1 727.61 / USD 2 225.50 / TRY 70 413.96 / RUB 156 352" },
+    { cat: "Бюджет", title: "Считаем только подтверждённое", sub: "отели, перелёты, авто, поезд", text: "Бюджетная вкладка теперь не смешивает подтверждённые брони с будущими тратами на месте. Рестораны, трансферы без оплаты, билеты по месту и отдельные налоги вне суммы брони остаются за рамкой итоговой цифры.", footer: "RUB estimate: ЦБ РФ 27.06.2026 + 2.5%" },
 
     { cat: "Что детям", title: "Анси и Езоло — лучшие детские дни", sub: "Вода, пляж, лодка", text: "Электролодка по Анси, пляж Doussard или Impérial, Jesolo с пологим входом и Caribe Bay для старших — это точки, где детям не надо терпеть взрослый маршрут.", footer: "Energy release matters" },
     { cat: "Что детям", title: "Коляска диктует маршрут", sub: "Лестницы, мостики, брусчатка", text: "Трабули, старый город Женевы, мостики Венеции, Форум и катакомбы требуют эрго-переноску. В этих местах коляска не помощник, а груз.", footer: "Carrier day: Venice and ancient Rome" },
