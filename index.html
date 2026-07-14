@@ -1054,6 +1054,109 @@
       font-weight: 700;
     }
 
+    .hotel-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .hotel-summary-item {
+      padding: 16px 18px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+    }
+    .hotel-summary-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hotel-summary-item strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    .hotel-list { display: grid; gap: 14px; }
+    .hotel-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+    .hotel-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+    }
+    .hotel-city {
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hotel-name {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+    .hotel-price {
+      white-space: nowrap;
+      font-size: 19px;
+      font-weight: 800;
+    }
+    .hotel-stay {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .hotel-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 22px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .hotel-field span {
+      display: block;
+      margin-bottom: 3px;
+      color: #8a94a5;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hotel-field strong {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .hotel-details {
+      margin: 16px 0 0;
+      padding-left: 20px;
+      color: #506072;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .hotel-warning {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border: 1px solid #f2c7c2;
+      border-radius: 12px;
+      background: #fff4f2;
+      color: var(--danger);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
     @media (max-width: 900px) {
       .grid-4, .grid-3, .grid-2, .scene-grid, .overview-cinema, .city-editorial { grid-template-columns: 1fr; }
       .budget-wrap { grid-template-columns: 1fr; }
@@ -1089,10 +1192,13 @@
         flex-direction: column;
         gap: 3px;
       }
+      .hotel-summary, .hotel-grid { grid-template-columns: 1fr; }
+      .hotel-top { flex-direction: column; }
+      .hotel-price { white-space: normal; }
     }
   </style>
   <script src="./config.js"></script>
-  <script src="./data.js?v=route-20260714b"></script>
+  <script src="./data.js?v=route-20260714c"></script>
 </head>
 <body>
   <div class="nav-wrap">
@@ -1101,6 +1207,7 @@
       <div class="tabs">
         <button class="tab-btn active" data-tab="main">Обзор</button>
         <button class="tab-btn" data-tab="plan">План</button>
+        <button class="tab-btn" data-tab="hotels">Отели</button>
         <button class="tab-btn" data-tab="budget">Бюджет</button>
         <button class="tab-btn" data-tab="tips">Советы</button>
         <button class="tab-btn" data-tab="ai">Консьерж ✨</button>
@@ -1216,6 +1323,21 @@
         </div>
       </div>
       <div id="plan-container" class="accordion-list"></div>
+    </section>
+
+    <section id="section-hotels" class="tab-section hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Все подтверждённые отели</h2>
+          <p class="section-note">Полная цепочка проживания: даты, номера, питание, адреса, суммы, номера броней и важные условия из файлов маршрута.</p>
+        </div>
+      </div>
+      <div class="hotel-summary">
+        <div class="hotel-summary-item"><span>Брони</span><strong>10 броней</strong></div>
+        <div class="hotel-summary-item"><span>Ночёвки</span><strong>26 ночей</strong></div>
+        <div class="hotel-summary-item"><span>Подтверждённая сумма</span><strong>17 949.30 EUR + 2 216.12 CHF</strong></div>
+      </div>
+      <div id="hotel-list" class="hotel-list"></div>
     </section>
 
     <section id="section-budget" class="tab-section hidden">
@@ -1402,15 +1524,15 @@
             <div class="accordion-body">
               <div class="city-editorial">
                 <article class="city-editorial-card">
-                  <span>Taste</span>
+                  <span>Что попробовать</span>
                   <p>${escapeHtml(editorial.taste)}</p>
                 </article>
                 <article class="city-editorial-card">
-                  <span>Mood</span>
+                  <span>Настроение</span>
                   <p>${escapeHtml(editorial.mood)}</p>
                 </article>
                 <article class="city-editorial-card">
-                  <span>With Kids</span>
+                  <span>С детьми</span>
                   <p>${escapeHtml(editorial.withKids)}</p>
                 </article>
               </div>
@@ -1465,6 +1587,35 @@
           </div>
         </article>
       `).join('');
+    }
+
+    function renderHotels() {
+      const container = document.getElementById('hotel-list');
+      container.innerHTML = (appData.hotels || []).map((hotel) => {
+        const details = (hotel.details || []).map((detail) => `<li>${escapeHtml(detail)}</li>`).join('');
+        return `
+          <article class="hotel-card">
+            <div class="hotel-top">
+              <div>
+                <div class="hotel-city">${escapeHtml(hotel.city)}</div>
+                <h3 class="hotel-name">${escapeHtml(hotel.name)}</h3>
+                <div class="hotel-stay">${escapeHtml(hotel.dates)} · ${escapeHtml(hotel.nights)} · ${escapeHtml(hotel.rooms)}</div>
+              </div>
+              <div class="hotel-price">${escapeHtml(hotel.amount)}</div>
+            </div>
+            <div class="hotel-grid">
+              <div class="hotel-field"><span>Адрес</span><strong>${escapeHtml(hotel.address)}</strong></div>
+              <div class="hotel-field"><span>Бронирование</span><strong>${escapeHtml(hotel.booking)}</strong></div>
+              <div class="hotel-field"><span>Заезд</span><strong>${escapeHtml(hotel.checkIn)}</strong></div>
+              <div class="hotel-field"><span>Выезд</span><strong>${escapeHtml(hotel.checkOut)}</strong></div>
+              <div class="hotel-field"><span>Питание</span><strong>${escapeHtml(hotel.meal)}</strong></div>
+              ${hotel.phone ? `<div class="hotel-field"><span>Телефон</span><strong>${escapeHtml(hotel.phone)}</strong></div>` : ''}
+            </div>
+            ${details ? `<ul class="hotel-details">${details}</ul>` : ''}
+            ${hotel.warning ? `<div class="hotel-warning">${escapeHtml(hotel.warning)}</div>` : ''}
+          </article>
+        `;
+      }).join('');
     }
 
     function renderBudget() {
@@ -1612,6 +1763,7 @@
           'Коляска и короткие переходы важнее плотной программы'
         ],
         flights: appData.flights,
+        hotels: appData.hotels,
         cities: appData.cities.map((city) => ({
           name: city.name,
           dates: city.dates,
@@ -1713,6 +1865,7 @@
 
     renderPlan();
     renderFlights();
+    renderHotels();
     renderBudget();
     renderTipFilters();
     renderTips('Все');
